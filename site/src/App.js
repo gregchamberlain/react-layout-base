@@ -6,6 +6,8 @@ import { Layout, LayoutState } from '../../src';
 import Text from './components/Text';
 import Column from './components/Column';
 
+import { DnD } from './plugins';
+
 const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
 
 let defaultState: LayoutState = new LayoutState();
@@ -80,6 +82,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
+          plugins={[DnD]}
         />
       </div>
     );

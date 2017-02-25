@@ -45,6 +45,8 @@
     "jest": "^19.0.1",
     "react": "^15.3.0",
     "react-addons-test-utils": "^15.4.2",
+    "react-dnd": "^2.2.3",
+    "react-dnd-html5-backend": "^2.2.3",
     "react-dom": "^15.3.0",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-test-renderer": "^15.4.2",

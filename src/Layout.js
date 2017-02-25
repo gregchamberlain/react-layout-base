@@ -2,6 +2,7 @@
 import React, { PropTypes } from 'react';
 
 import Provider from './components/Provider';
+import PluginManager from './components/PluginManager';
 import OuterWrapper from './components/OuterWrapper';
 import LayoutState from './model/LayoutState';
 
@@ -14,7 +15,9 @@ type Props = {
 
 const Layout = (props: Props) => (
   <Provider {...props}>
-    <OuterWrapper id="root" />
+    <PluginManager>
+      <OuterWrapper id="root" />
+    </PluginManager>
   </Provider>
 );
 
