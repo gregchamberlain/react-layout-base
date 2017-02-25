@@ -7,7 +7,7 @@ import LayoutState from './model/LayoutState';
 
 type Props = {
   layoutState: LayoutState,
-  onChange: () => void,
+  onChange: ?() => void,
   components: Object,
   plugins: ?Array<Object>
 };
@@ -20,8 +20,9 @@ const Layout = (props: Props) => (
 
 Layout.propTypes = {
   layoutState: PropTypes.instanceOf(LayoutState).isRequired,
-  onChange: PropTypes.func.isRequired,
-  components: PropTypes.object.isRequired
+  onChange: PropTypes.func,
+  components: PropTypes.object.isRequired,
+  plugins: PropTypes.array
 };
 
 export default Layout;

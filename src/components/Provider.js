@@ -21,7 +21,6 @@ class LayoutProvider extends PureComponent {
 
   constructor(props: Props) {
     super(props);
-    props.layoutState.setOnChangeListener(props.onChange);
     this.store = new Store({
       layoutState: props.layoutState,
       components: props.components,
@@ -32,7 +31,7 @@ class LayoutProvider extends PureComponent {
 
   getChildContext() {
     return {
-      store: this.store
+      layoutStore: this.store
     };
   }
 
@@ -54,7 +53,7 @@ class LayoutProvider extends PureComponent {
 }
 
 LayoutProvider.childContextTypes = {
-  store: PropTypes.instanceOf(Store)
+  layoutStore: PropTypes.instanceOf(Store)
 };
 
 LayoutProvider.propTypes = {
@@ -67,7 +66,8 @@ LayoutProvider.propTypes = {
 };
 
 LayoutProvider.defaultProps = {
-  plugins: []
+  plugins: [],
+  onChange: () => {}
 };
 
 export default LayoutProvider;

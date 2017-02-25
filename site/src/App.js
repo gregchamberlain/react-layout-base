@@ -1,10 +1,10 @@
 // @flow
 import React, { PureComponent } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 import { Layout, LayoutState } from '../../src';
-
-const Column = ({ children }) => <div style={{ border: '1px solid #aaa', padding: 10}}>{children}</div>
-const Text = ({ text }) => <div>Text: {text}</div>
+import Text from './components/Text';
+import Column from './components/Column';
 
 const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
 
@@ -27,27 +27,61 @@ const components = {
 class App extends PureComponent {
 
   state: {
-    layoutState: LayoutState
+    layoutState: LayoutState,
+    value: string
   }
 
   constructor() {
     super();
     this.state = {
-      layoutState: defaultState
+      layoutState: defaultState,
+      value: ''
     };
   }
 
-  onChange = (layoutState: LayoutState)=> {
+  onChange = (layoutState: LayoutState) => {
     this.setState({ layoutState });
+  }
+
+  onValueChange = (e: any) => {
+    this.setState({ value: e.target.value });
+  }
+
+  addItem = (e: any) => {
+    e.preventDefault();
+    let layoutState;
+    this.state.layoutState.setOnChangeListener(nextState => {
+      layoutState = nextState;
+    });
+    this.state.layoutState.insertOrMoveItem('root', 0, item1(this.state.value));
+    this.setState({ layoutState, value: '' });
+  }
+
+  printMarkup = () => {
+    const markup = renderToStaticMarkup(
+      <Layout
+        layoutState={this.state.layoutState}
+        onChange={() => {}}
+        components={components}
+      />
+    );
+    console.log(markup);
   }
 
   render() {
     return (
-      <Layout
-        layoutState={this.state.layoutState}
-        onChange={this.onChange}
-        components={components}
-      />
+      <div>
+        <form onSubmit={this.addItem}>
+          <input type="text" onChange={this.onValueChange} value={this.state.value} />
+          <button>Add Item</button>
+        </form>
+        <button onClick={this.printMarkup}>Print Markup</button>
+        <Layout
+          layoutState={this.state.layoutState}
+          onChange={this.onChange}
+          components={components}
+        />
+      </div>
     );
   }
 }

@@ -10,7 +10,7 @@ const getDisplayName = (WrappedComponent: ReactClass<*>): string => {
 
 
 type Context = {
-  store: Store
+  layoutStore: Store
 };
 
 const withStore = (...items: Array<string>) => (WrappedComponent: ReactClass<*>) => {
@@ -22,11 +22,11 @@ const withStore = (...items: Array<string>) => (WrappedComponent: ReactClass<*>)
 
     constructor(props: Object, context: Context) {
       super(props, context);
-      this.state = context.store.subscribe(items, this.updateState);
+      this.state = context.layoutStore.subscribe(items, this.updateState);
     }
 
     componentWillUnmount() {
-      this.context.store.unsubscribe(items, this.updateState);
+      this.context.layoutStore.unsubscribe(items, this.updateState);
     }
 
     updateState = (key: string, value: any): void => {
@@ -43,7 +43,7 @@ const withStore = (...items: Array<string>) => (WrappedComponent: ReactClass<*>)
   hoistNonReactStatic(WithStore, WrappedComponent);
 
   WithStore.contextTypes = {
-    store: PropTypes.instanceOf(Store)
+    layoutStore: PropTypes.instanceOf(Store)
   };
 
   return WithStore;
