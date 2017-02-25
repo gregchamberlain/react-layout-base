@@ -1,5 +1,6 @@
 // @flow
 import React, { PureComponent, PropTypes } from 'react';
+import createFragment from 'react-addons-create-fragment'
 
 import LayoutState from '../model/LayoutState';
 import InnerWrapper from './InnerWrapper';
@@ -20,25 +21,49 @@ class OuterWrapper extends PureComponent {
 
   props: Props;
   state: State;
+  cachedChildren: Object;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       component: () => null
     };
+    this.cachedChildren = {};
+  }
+
+  createChild = id => {
+    if (!this.cachedChildren[id]) {
+      this.cachedChildren[id] = <Wrapper key={id} id={id} />;
+    }
+    return this.cachedChildren[id];
   }
 
   componentWillMount() {
+    // console.log('mounting: ', this.props.id);
     this.applyPlugins(this.props);
   }
 
+  componentWillUpdate(nextProps) {
+    const item = this.props.layoutState.getItem(this.props.id);
+    const nextItem = nextProps.layoutState.getItem(nextProps.id);
+    const children = item.children.map(c => this.createChild(c));
+    const nextChildren = nextItem.children.map(c => this.createChild(c));
+    nextChildren.forEach((child, idx) => {
+      const id = nextItem.children[idx];
+      if (this.cachedChildren[id] !== child) {
+        console.warn('New child: ', id);
+      }
+    });
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (nextProps.id !== this.props.id || nextProps.plugins !== this.props.plugins) {
+    if (nextProps.plugins !== this.props.plugins) {
       this.applyPlugins(nextProps);
     }
   }
 
   applyPlugins = (props: Props) => {
+    console.log('applying wrapper plugins...');
     const type: String = props.layoutState.getItem(props.id).type;
     let component: ReactClass<*> = InnerWrapper(props.components[type], type); 
     props.plugins.forEach(plugin => {
@@ -55,9 +80,7 @@ class OuterWrapper extends PureComponent {
 
     return (
       <WrappedComponent id={id} pseudoRef={() => {}} {...item.props}>
-        {React.Children.map(item.children, childId => (
-          <Wrapper key={childId} id={childId} />
-        ))}
+        {item.children.map(childId => this.createChild(childId))}
       </WrappedComponent>
     );
 

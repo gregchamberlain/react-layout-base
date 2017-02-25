@@ -44,6 +44,7 @@
     "flow-bin": "^0.40.0",
     "jest": "^19.0.1",
     "react": "^15.3.0",
+    "react-addons-perf": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
     "react-dnd": "^2.2.3",
     "react-dnd-html5-backend": "^2.2.3",
@@ -59,6 +60,7 @@
   },
   "dependencies": {
     "hoist-non-react-statics": "^1.2.0",
-    "immutable": "^3.8.1"
+    "immutable": "^3.8.1",
+    "react-addons-create-fragment": "^15.4.2"
   }
 }

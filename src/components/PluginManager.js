@@ -12,16 +12,17 @@ class PluginManager extends PureComponent {
   }
 
   componentWillMount() {
-    this.applyPlugns(this.props);
+    this.applyPlugins(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.plugins !== this.props.plugins) {
-      this.applyPlugns(nextProps);
+      // this.applyPlugins(nextProps);
     }
   }
 
-  applyPlugns = (props) => {
+  applyPlugins = (props) => {
+    console.log('applying plugin providers...');
     let provider = ({ children }) => children;
     props.plugins.forEach(plugin => {
       if (plugin.Provider) provider = plugin.Provider(provider);

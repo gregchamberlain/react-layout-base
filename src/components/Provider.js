@@ -3,6 +3,7 @@ import React, { PureComponent, PropTypes } from 'react';
 
 import LayoutState from '../model/LayoutState';
 import Store from '../store/Store';
+import shallowCompare from '../utils/shallowCompare';
 
 type Props = {
   layoutState: LayoutState,
@@ -42,7 +43,7 @@ class LayoutProvider extends PureComponent {
       this.store.update('layoutState', nextProps.layoutState);
     }
     watched.forEach(key => {
-      if (nextProps[key] !== this.props[key]) this.store.update(key, nextProps[key]);
+      if (!shallowCompare(nextProps[key], this.props[key])) this.store.update(key, nextProps[key]);
     });
   }
 
