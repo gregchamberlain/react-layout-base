@@ -3,6 +3,7 @@ import React, { PureComponent, PropTypes } from 'react';
 
 import LayoutState from '../model/LayoutState';
 import Store from '../store/Store';
+import InnerWrapper from './InnerWrapper';
 import shallowCompare from '../utils/shallowCompare';
 
 type Props = {
@@ -28,6 +29,17 @@ class LayoutProvider extends PureComponent {
       plugins: props.plugins,
       readOnly: props.readOnly
     });
+    this.applyPlugins(props);
+  }
+
+  applyPlugins = (props: Props) => {
+    let RootWrapper = InnerWrapper;
+    props.plugins.forEach(plugin => {
+      if (plugin.Wrapper) {
+        RootWrapper = plugin.Wrapper(RootWrapper);
+      };
+    });
+    this.store.update('RootWrapper', RootWrapper);
   }
 
   getChildContext() {

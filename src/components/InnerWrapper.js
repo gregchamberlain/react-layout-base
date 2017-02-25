@@ -1,28 +1,15 @@
-// @flow
-import React, { PureComponent } from 'react';
-import hoistNonReactStatic from 'hoist-non-react-statics';
+import React, { PureComponent, PropTypes } from 'react';
 
-const Wrapper: ReactClass<*> = (WrappedComponent: ReactClass<*>, displayName: string) => {
-
-  const InnerWrapper: ReactClass<*> = ({ pseudoRef, ...props }) => {
-
-    class ClassWrapper extends PureComponent {
-      render() {
-        return <WrappedComponent {...this.props} />
-      }
-    }
-
-    ClassWrapper.displayName = `ClassWrapper(${displayName})`;
-
-    return <ClassWrapper {...props} ref={instance => pseudoRef(instance)} />
-
+class ClassWrapper extends PureComponent {
+  render() {
+    return React.Children.only(this.props.children);
   }
+}
 
-  InnerWrapper.displayName = `InnerWrapper(${displayName})`;
-  hoistNonReactStatic(InnerWrapper, WrappedComponent);
-
-  return InnerWrapper;
-
+ClassWrapper.propTypes = {
+  children: PropTypes.element
 };
 
-export default Wrapper;
+const InnerWrapper = ({ pseudoRef, ...props }) => <ClassWrapper {...props} ref={instance => pseudoRef(instance)} />
+
+export default InnerWrapper;

@@ -12,6 +12,7 @@ class Store {
 
   update(key: string, value: any) {
     this.state[key] = value;
+    if (!this.listeners[key]) return;
     this.listeners[key].forEach(listener => {
       listener(key, value);
     });
