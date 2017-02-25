@@ -6,7 +6,7 @@ import { Layout, LayoutState } from '../../src';
 import Text from './components/Text';
 import Column from './components/Column';
 
-import { DnD } from './plugins';
+import { DnD, Style } from './plugins';
 
 const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
 
@@ -30,14 +30,16 @@ class App extends PureComponent {
 
   state: {
     layoutState: LayoutState,
-    value: string
+    value: string,
+    checked: boolean
   }
 
   constructor() {
     super();
     this.state = {
       layoutState: defaultState,
-      value: ''
+      value: '',
+      checked: true
     };
   }
 
@@ -59,6 +61,10 @@ class App extends PureComponent {
     this.setState({ layoutState, value: '' });
   }
 
+  applyAddon = (e: any) => {
+    this.setState({ checked: e.target.checked });
+  }
+
   printMarkup = () => {
     const markup = renderToStaticMarkup(
       <Layout
@@ -78,11 +84,12 @@ class App extends PureComponent {
           <button>Add Item</button>
         </form>
         <button onClick={this.printMarkup}>Print Markup</button>
+        <input type="checkbox" onChange={this.applyAddon} checked={this.state.checked} />
         <Layout
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={[DnD]}
+          plugins={this.state.checked ? [DnD, Style] : []}
         />
       </div>
     );

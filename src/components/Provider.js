@@ -33,6 +33,7 @@ class LayoutProvider extends PureComponent {
   }
 
   applyPlugins = (props: Props) => {
+    console.log('Creating Root Wrapper...');
     let RootWrapper = InnerWrapper;
     props.plugins.forEach(plugin => {
       if (plugin.Wrapper) {
@@ -49,10 +50,13 @@ class LayoutProvider extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const watched = ['components', 'plugins', 'readOnly'];
+    const watched = ['components', 'readOnly'];
     if (nextProps.layoutState !== this.props.layoutState) {
       nextProps.layoutState.setOnChangeListener(nextProps.onChange);
       this.store.update('layoutState', nextProps.layoutState);
+    }
+    if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
+      this.applyPlugins(nextProps);
     }
     watched.forEach(key => {
       if (!shallowCompare(nextProps[key], this.props[key])) this.store.update(key, nextProps[key]);
