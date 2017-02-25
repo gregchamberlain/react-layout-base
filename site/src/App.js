@@ -1,12 +1,27 @@
 // @flow
 import React, { PureComponent } from 'react';
 
-import { Provider, LayoutState } from '../../src';
+import { Layout, LayoutState } from '../../src';
 
-const TestComp = () => <div>This is a Test Component!</div>
+const Column = ({ children }) => <div style={{ border: '1px solid #aaa', padding: 10}}>{children}</div>
+const Text = ({ text }) => <div>Text: {text}</div>
+
+const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
+
+let defaultState: LayoutState = new LayoutState();
+defaultState.setOnChangeListener(nextState => {
+  defaultState = nextState;
+});
+defaultState.insertOrMoveItem('root', 0, item1('Item 1!'));
+defaultState.setOnChangeListener(nextState => {
+  defaultState = nextState;
+});
+defaultState.insertOrMoveItem('root', 1, item1('Item 2!'));
+console.log(defaultState.toRaw());
 
 const components = {
-  TestComp
+  Column,
+  Text
 };
 
 class App extends PureComponent {
@@ -18,7 +33,7 @@ class App extends PureComponent {
   constructor() {
     super();
     this.state = {
-      layoutState: new LayoutState()
+      layoutState: defaultState
     };
   }
 
@@ -28,11 +43,11 @@ class App extends PureComponent {
 
   render() {
     return (
-      <Provider layoutState={this.state.layoutState} onChange={this.onChange} components={components}>
-        <div>
-          Hello there everyone!
-        </div>
-      </Provider>
+      <Layout
+        layoutState={this.state.layoutState}
+        onChange={this.onChange}
+        components={components}
+      />
     );
   }
 }

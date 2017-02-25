@@ -17,7 +17,7 @@ class Store {
     });
   }
 
-  subscribe(keys: Array<string>, listener: Function) {
+  subscribe(keys: Array<string>, listener: Function): Object {
     let result: Object = {};
     keys.forEach(key => {
       if (this.listeners[key]) {

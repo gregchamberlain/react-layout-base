@@ -2,7 +2,7 @@
 import React, { PureComponent, PropTypes } from 'react';
 
 import LayoutState from '../model/LayoutState';
-import Store from '../model/Store';
+import Store from '../store/Store';
 
 type Props = {
   layoutState: LayoutState,

@@ -9,7 +9,7 @@ export const deepRemove = (map: LayoutState, id: string): LayoutState => {
   return map.deleteIn(['items', id]);
 };
 
-const defaultItems:Map = fromJS({ root: {
+const defaultItems: Map<*> = fromJS({ root: {
   id: 'root',
   type: 'Column',
   props: { },
@@ -114,7 +114,7 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
   onChange(nextState: LayoutState): void {
     this.listener(nextState);
   }
-  
+
 }
 
 LayoutState.fromRaw = (raw: Object): LayoutState => {
