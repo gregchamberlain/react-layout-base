@@ -23,6 +23,7 @@ class LayoutProvider extends PureComponent {
 
   constructor(props: Props) {
     super(props);
+    props.layoutState.setOnChangeListener(props.onChange);
     this.store = new Store({
       layoutState: props.layoutState,
       components: props.components,
