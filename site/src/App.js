@@ -10,7 +10,7 @@ import { DnD, Style, ContextMenu, Undo } from './plugins';
 
 const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
 
-let defaultState: LayoutState = new LayoutState();
+let defaultState: LayoutState = new LayoutState('Column');
 defaultState = defaultState.insertOrMoveItem('root', 0, item1('Item 1!'));
 defaultState = defaultState.insertOrMoveItem('root', 1, item1('Item 2!'));
 console.log(defaultState.toRaw());
