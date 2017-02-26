@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, PropTypes } from 'react';
-import createFragment from 'react-addons-create-fragment'
+import { connect } from 'react-redux';
 
 import LayoutState from '../model/LayoutState';
 import InnerWrapper from './InnerWrapper';
@@ -16,6 +16,10 @@ type Props = {
 class OuterWrapper extends PureComponent {
 
   props: Props;
+
+  componentWillMount() {
+    console.log('mounting: ', this.props.id);
+  }
 
   render() {
 
@@ -41,6 +45,12 @@ OuterWrapper.propTypes = {
   components: PropTypes.object.isRequired,
 };
 
-const Wrapper = withStore('layoutState', 'components', 'RootWrapper')(OuterWrapper);
+const mapStateToProps = ({ layoutState, layoutExtras }) => ({
+  layoutState,
+  components: layoutExtras.components,
+  RootWrapper: layoutExtras.RootWrapper
+});
+
+const Wrapper = connect(mapStateToProps)(OuterWrapper);
 
 export default Wrapper;

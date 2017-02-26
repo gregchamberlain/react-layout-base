@@ -89,7 +89,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={this.state.checked ? [DnD, ContextMenu] : []}
+          plugins={ this.state.checked ? [DnD] : [] }
         />
       </div>
     );

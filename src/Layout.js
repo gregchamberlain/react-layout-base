@@ -16,7 +16,7 @@ type Props = {
 
 const Layout = ({ style, ...props}: Props) => (
   <Provider {...props}>
-    <PluginManager style={style}>
+    <PluginManager style={style} plugins={props.plugins}>
       <OuterWrapper id="root" />
     </PluginManager>
   </Provider>

@@ -1,5 +1,6 @@
 // @flow
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import withStore from '../store/withStore';
 
@@ -10,7 +11,7 @@ type Props = {
   style: ?Object
 }
 
-const PluginProvider: Function = ({ RootProvider, children, plugins, style }: Props): React$Element<*> => (
+const PluginProvider: Function = ({ RootProvider, children, plugins = [], style }: Props): React$Element<*> => (
   <RootProvider>
     <div style={style}>
       {children}
@@ -25,4 +26,9 @@ PluginProvider.propTypes = {
   RootProvider: PropTypes.func.isRequired
 }
 
-export default withStore('RootProvider', 'plugins')(PluginProvider);
+const mapStateToProps = ({ layoutExtras }) => ({
+  RootProvider: layoutExtras.RootProvider,
+  plugins: layoutExtras.plugins
+});
+
+export default connect(mapStateToProps)(PluginProvider);
