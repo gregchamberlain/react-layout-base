@@ -1,15 +1,20 @@
 // @flow
 import { Map, Record, fromJS } from 'immutable';
+import update from 'immutability-helper';
 
 export const deepRemove = (map: LayoutState, id: string): LayoutState => {
-  const children = map.getIn(['items', id, 'children']);
+  const children = map.getItem(id).children;
   if (children) children.forEach(child => {
     map = deepRemove(map, child)
   });
   return map.deleteIn(['items', id]);
 };
 
-const defaultItems: Map<*> = fromJS({ root: {
+const createItems = (type: string | Object): Map<string, Object> => Map({
+  root: { id: 'root', type, props: {}, children: [] }
+});
+
+const defaultItems: Map<string, Object> = Map({ root: {
   id: 'root',
   type: 'Column',
   props: { },
@@ -17,10 +22,25 @@ const defaultItems: Map<*> = fromJS({ root: {
   style: { }
 }});
 
-class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
+const validateShape = (items: Object): boolean => {
+  if (typeof items !== 'object' || Array.isArray(items)) return false;
+  if (!items['root']) return false;
+  Object.keys(items).forEach(id => {
+    const item = items[id];
+    if (!(item.id && item.type && item.props)) return false;
+  });
+  return true;
+}
 
-  constructor() {
-    super();
+class LayoutState extends Record({ items: Map(), selectedItem: null }) {
+
+  constructor(type: string | Object) {
+    if (type !== 'string' && validateShape(type)) throw new Error('LayoutState must be supplied either a root Component type or items data');
+    if (type instanceof Object) {
+      super({ items: Map(type) });
+    } else {
+      super({ items: createItems(type) });
+    }
   }
 
   /**
@@ -29,8 +49,9 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
    * @return {Object} item
    */
   getItem(id: string): Object  {
-    const item = this.items.get(id);
-    return item && item.toJS();
+    return this.items.get(id);
+    // const item = this.items.get(id);
+    // return item && item.toJS();
   }
 
   insertOrMoveItem(parentId: string, idx: number, item: Object): Object {
@@ -41,10 +62,9 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
     item.id = this.generateRandomKey();
     item.parent = { id: parentId, idx: idx };
     let nextState: LayoutState = this
-      .setIn(['items', item.id], fromJS(item))
-      .updateIn(['items', parentId, 'children'], c => c.splice(idx, 0, item.id));
-    this.onChange(nextState);
-    return item;
+      .setIn(['items', item.id], item)
+      .updateItem(parentId, { children: { $splice: [[idx, 0, item.id]] } });
+    return nextState;
   }
 
   moveItem(parentId: string, idx: number, item: Object): Object {
@@ -52,38 +72,32 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
       idx--;
     }
     let nextState: LayoutState = this
-      .updateIn(['items', item.parent.id, 'children'], c => c.filter(id => id !== item.id))
-      .updateIn(['items', parentId, 'children'], c => c.splice(idx, 0, item.id))
-      .setIn(['items', item.id, 'parent'], fromJS({ id: parentId, idx })); 
-    this.onChange(nextState);
-    return nextState.getItem(item.id);
+      .updateItem(item.parent.id, { children: { $apply: c => c.filter(id => id !== item.id) } })
+      .updateItem(parentId, { children: { $splice: [[idx, 0, item.id]] } })
+      .updateItem(item.id, { parent: { $set: { id: parentId, idx } } });
+    return nextState;
   }
 
-  removeItem(id: string): ?Object {
-    if (id === 'root') return;
+  updateItem(id: string, updater: Object): LayoutState {
+    return this.updateIn(['items', id], item => update(item, updater));
+  }
+
+  removeItem(id: string): LayoutState {
+    if (id === 'root') return this;
     const item: Object = this.getItem(id);
     const parentId: string = item.parent.id;
-    const nextState: LayoutState = this.updateIn(['items', parentId, 'children'], c => c.filter(cId => cId !== id));
-    this.onChange(deepRemove(nextState, id))
-    return item;
-  }
-
-  updateItem(id: string): Function {
-    return (path: Array<string|number>, updater: Function): Object => {
-      const nextState: LayoutState = this.updateIn(['items', id, ...path], updater);
-      this.onChange(nextState);
-      return nextState.getItem(id);
-    };
+    const nextState: LayoutState = this
+    .updateItem(parentId, { children: { $apply: c => c.filter(cId => cId !== id) }});
+    return deepRemove(nextState, id);
   }
 
   setSelectedItem(id: ?string): void {
     if (this.selectedItem === id) return;
-    this.onChange(this.set('selectedItem', id));
+    return this.set('selectedItem', id);
   }
 
   getSelectedItem(): ?Object {
-    const item = this.items.get(this.selectedItem);
-    return item && item.toJS();
+    return this.items.get(this.selectedItem);
   }
 
   getAncestors(id: string): Array<Object> {
@@ -106,20 +120,11 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
     return key;
   }
 
-  setOnChangeListener(listener: Function): boolean {
-    this.listener = listener;
-    return true;
-  }
-
-  onChange(nextState: LayoutState): void {
-    this.listener(nextState);
-  }
-
 }
 
 LayoutState.fromRaw = (raw: Object): LayoutState => {
   let layoutState: LayoutState = new LayoutState();
-  return layoutState.set('items', fromJS(raw));
+  return layoutState.set('items', Map(raw));
 };
 
 export default LayoutState;

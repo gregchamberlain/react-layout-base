@@ -10,12 +10,14 @@ const item3 = { id: 'item3', type: 'Test', props: {}, style: {}, children: [], p
 const items = {
   root: rootItem,
   item1,
-  item2
+  item2,
+  item3
 };
+
+const ids = new Set(['root', 'item1', 'item2', 'item3']);
 
 let state = LayoutState.fromRaw(items);
 let referenceState = LayoutState.fromRaw(items);
-state.setOnChangeListener(() => {});
 let nextItem = { type: 'Test', props: {}, children: [], style: {} };
 
 describe('LayoutState', () => {
@@ -36,24 +38,20 @@ describe('LayoutState', () => {
   });
 
   describe('#insertItem', () => {
-    let nextState;
-    let changeListener = jest.fn(s => { nextState = s });
-    state.setOnChangeListener(changeListener);
-    let newItem = state.insertItem('root', 0, nextItem);
-    it('calls onChange with the new state', () => {
-      expect(changeListener).toHaveBeenCalled();
+    let nextState = state.insertItem('root', 0, nextItem);
+    let newItem = nextState.items.toArray().filter(item => !ids.has(item.id))[0];
+
+    it('returns the next state', () => {
+      expect(nextState instanceof LayoutState).toBe(true);
+      expect(nextState).not.toEqual(state);
     });
 
     it('inserts item in parents children, at the correct index', () => {
-      expect(nextState.getIn(['items', 'root', 'children', 0])).toEqual(newItem.id);
+      expect(nextState.getItem('root').children[0]).toEqual(newItem.id);
     })
 
     it('adds the item to nextState', () => {
       expect(nextState.getItem(newItem.id)).not.toBeUndefined();
-    });
-
-    it('returns the item', () => {
-      expect(newItem).not.toBeUndefined();
     });
 
     it('doesnt mutate the original state', () => {
@@ -66,21 +64,15 @@ describe('LayoutState', () => {
 
     describe('same parent', () => {
 
-      let nextState;
-      let changeListener = jest.fn(s => { nextState = s });
-      state.setOnChangeListener(changeListener);
-      let newItem = state.moveItem('root', 2, state.getItem('item1'));
+      let nextState = state.moveItem('root', 2, state.getItem('item1'));
 
-      it('calls onChange with the new state', () => {
-        expect(changeListener).toHaveBeenCalled();
+      it('returns the next state', () => {
+        expect(nextState instanceof LayoutState).toBe(true);
+        expect(nextState).not.toEqual(state);
       });
 
       it('inserts item in parents children, at the correct index', () => {
-        expect(nextState.getIn(['items', 'root', 'children', 1])).toEqual(newItem.id);
-      });
-
-      it('returns the moved item', () => {
-        expect(newItem).not.toBeUndefined();
+        expect(nextState.getItem('root').children[1]).toEqual('item1');
       });
 
       it('doesnt mutate the original state', () => {
@@ -90,25 +82,19 @@ describe('LayoutState', () => {
     });
 
     describe('new parent', () => {
-      let nextState;
-      let changeListener = jest.fn(s => { nextState = s });
-      state.setOnChangeListener(changeListener);
-      let newItem = state.moveItem('item1', 0, state.getItem('item2'));
+      let nextState = state.moveItem('item1', 0, state.getItem('item2'));
 
-      it('calls onChange with the new state', () => {
-        expect(changeListener).toHaveBeenCalled();
+      it('returns the next state', () => {
+        expect(nextState instanceof LayoutState).toBe(true);
+        expect(nextState).not.toEqual(state);
       });
 
       it('removes item from old parents children', () => {
-        expect(nextState.getIn(['items', 'root', 'children'])).not.toContain('item2');
+        expect(nextState.getItem('root').children).not.toContain('item2');
       });
 
       it('inserts item in parents children, at the correct index', () => {
-        expect(nextState.getIn(['items', 'item1', 'children', 0])).toEqual(newItem.id);
-      });
-
-      it('returns the moved item', () => {
-        expect(newItem).not.toBeUndefined();
+        expect(nextState.getItem('item1').children[0]).toEqual('item2');
       });
 
       it('doesnt mutate the original state', () => {
@@ -120,17 +106,15 @@ describe('LayoutState', () => {
   });
 
   describe('#updateitem', () => {
-    let nextState
-    let changeListener = jest.fn(s => { nextState = s });
-    state.setOnChangeListener(changeListener);
-    state.updateItem('root')(['props', 'test'], () => 1);
+    let nextState = state.updateItem('root', { props: { test: { $set: 1 } } });
+
+    it('returns the next state', () => {
+      expect(nextState instanceof LayoutState).toBe(true);
+      expect(nextState).not.toEqual(state);
+    });
 
     it('updates the item', () => {
       expect(nextState.getItem('root').props.test).toEqual(1);
-    });
-
-    it('calls onChange with the new state', () => {
-      expect(changeListener).toHaveBeenCalledWith(nextState);
     });
 
     it('doesnt mutate the original state', () => {
@@ -140,17 +124,12 @@ describe('LayoutState', () => {
   });
 
   describe('#removeItem', () => {
-    let nextState
-    let changeListener = jest.fn(s => { nextState = s });
-    state.setOnChangeListener(changeListener);
-    let removedItem = state.removeItem('item1');
 
-    it('calls onChange with the next state', () => {
-      expect(changeListener).toHaveBeenCalledWith(nextState);
-    });
+    let nextState = state.removeItem('item1');
 
-    it('returns the removed item', () => {
-      expect(removedItem).not.toBeUndefined();
+    it('returns the next state', () => {
+      expect(nextState instanceof LayoutState).toBe(true);
+      expect(nextState).not.toEqual(state);
     });
 
     it('removes the item', () => {
@@ -162,7 +141,7 @@ describe('LayoutState', () => {
     });
 
     it('removes the item from parents children', () => {
-      expect(nextState.getIn(['items', removedItem.parent.id, 'children'])).not.toContain(removedItem.id);
+      expect(nextState.getItem('root').children).not.toContain('item1');
     });
 
     it('doesnt mutate the original state', () => {
@@ -170,7 +149,7 @@ describe('LayoutState', () => {
     });
   });
 
-  describe('#getitemJS', () => {
+  describe('#getitem', () => {
 
     it('with a valid id, returns the item object', () => {
       expect(state.getItem('item1')).toEqual(item1);
@@ -197,13 +176,15 @@ describe('LayoutState', () => {
   });
 
   describe('#setSelectedItem', () => {
-    let nextState;
-    let changeListener = jest.fn(s => { nextState = s });
-    state.setOnChangeListener(changeListener);
-    state.setSelectedItem('root');
+    let nextState = state.setSelectedItem('root');
 
     it('sets the selected item', () => {
       expect(nextState.get('selectedItem')).toEqual('root');
+    });
+
+    it('returns the next state', () => {
+      expect(nextState instanceof LayoutState).toBe(true);
+      expect(nextState).not.toEqual(state);
     });
 
     it('doesnt mutate the original state', () => {
@@ -229,14 +210,6 @@ describe('LayoutState', () => {
   describe('#toRaw', () => {
     let raw = state.toRaw();
     expect(raw).toEqual(items);
-  });
-
-  describe('#onChange', () => {
-    let changeListener = jest.fn();
-    state.setOnChangeListener(changeListener);
-    it('sets the onChange listener', () => {
-      expect(state.listener).toEqual(changeListener);
-    });
   });
 
 });

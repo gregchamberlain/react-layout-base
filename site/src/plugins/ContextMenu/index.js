@@ -1,9 +1,8 @@
 import Wrapper from './Wrapper';
-import Provider from './Provider';
 import Menu from './Menu';
 
 export default {
+  Name: 'contextMenu',
   Wrapper,
-  Provider,
-  Component: Menu
+  Component: Menu,
 };

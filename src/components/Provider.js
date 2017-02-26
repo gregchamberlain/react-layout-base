@@ -1,8 +1,10 @@
 // @flow
 import React, { PureComponent, PropTypes } from 'react';
+import { Provider } from 'react-redux';
 
+import configureStore, { injectReducers } from '../redux';
 import LayoutState from '../model/LayoutState';
-import Store from '../store/Store';
+import { setLayoutState, setExtra } from '../actions';
 import InnerWrapper from './InnerWrapper';
 import shallowCompare from '../utils/shallowCompare';
 
@@ -19,63 +21,75 @@ class LayoutProvider extends PureComponent {
 
   static defaultProps: Object
   props: Props
-  store: Store
+  store: any
 
   constructor(props: Props) {
     super(props);
-    props.layoutState.setOnChangeListener(props.onChange);
-    this.store = new Store({
-      layoutState: props.layoutState,
-      components: props.components,
-      plugins: props.plugins,
-      readOnly: props.readOnly
+    const reducers = {};
+    props.plugins.forEach(plugin => {
+      if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
     });
-    this.applyPlugins(props);
+    this.store = configureStore(reducers, {
+      layoutState: props.layoutState,
+      nextLayoutState: props.layoutState,
+      layoutExtras: {
+        plugins: props.plugins,
+        components: props.components,
+        ...this.applyPlugins(props)
+      }
+    });
+    this.store.subscribe(this.onStoreChange);
   }
 
-  applyPlugins = (props: Props) => {
-    console.log('Creating Root Wrapper...');
-    // Constructing the RootWrapper
+  onStoreChange = () => {
+    const state = this.store.getState();
+    if (state.layoutState !== state.nextLayoutState) {
+      this.props.onChange(state.nextLayoutState);
+    }
+  }
+
+  applyPlugins = (props: Props): Object => {
     let RootWrapper = InnerWrapper;
-    let RootProvider = ({ children }) => children;
+    let RootProvider = ({ children }: { children: any }) => children;
+    let reducers = {};
     props.plugins.forEach(plugin => {
       if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
       if (plugin.Provider) RootProvider = plugin.Provider(RootProvider, this.store);
+      if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
     });
-    this.store.update('RootWrapper', RootWrapper);
-    this.store.update('RootProvider', RootProvider);
-    // Constructing the RootProvider
-  }
-
-  getChildContext() {
+    if (this.store) {
+      injectReducers(this.store, reducers);
+    }
     return {
-      layoutStore: this.store
+      RootWrapper,
+      RootProvider
     };
   }
 
   componentWillReceiveProps(nextProps: Props) {
     const watched = ['components', 'readOnly'];
     if (nextProps.layoutState !== this.props.layoutState) {
-      nextProps.layoutState.setOnChangeListener(nextProps.onChange);
-      this.store.update('layoutState', nextProps.layoutState);
+      this.store.dispatch(setLayoutState(nextProps.layoutState));
     }
     if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
-      this.applyPlugins(nextProps);
+      const { RootWrapper, RootProvider } = this.applyPlugins(nextProps);
+      this.store.dispatch(setExtra('RootProvider', RootProvider));
+      this.store.dispatch(setExtra('RootWrapper', RootWrapper));
     }
     watched.forEach(key => {
-      if (!shallowCompare(nextProps[key], this.props[key])) this.store.update(key, nextProps[key]);
+      if (!shallowCompare(nextProps[key], this.props[key])) this.store.dispatch(setExtra(key, nextProps[key]));
     });
   }
 
   render() {
-    return React.Children.only(this.props.children);
+    return (
+      <Provider store={this.store}>
+        {React.Children.only(this.props.children)}
+      </Provider>
+    );
   }
 
 }
-
-LayoutProvider.childContextTypes = {
-  layoutStore: PropTypes.instanceOf(Store)
-};
 
 LayoutProvider.propTypes = {
   layoutState: PropTypes.instanceOf(LayoutState).isRequired,

@@ -1,17 +1,57 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
-import { withStore } from '../../../../src';
+import { insertOrMoveItem } from '../../../../src/actions';
 
-const Menu = ({ contextMenu, layoutState }) => contextMenu ? (
-  <div style={{
-    position: 'absolute',
-    top: contextMenu.y,
-    left: contextMenu.x,
-    backgroundColor: 'white',
-    boxShadow: '0 0 5px #aaa'
-  }}>
-    <div onClick={() => layoutState.removeItem(contextMenu.id)}  style={{ cursor: 'pointer', padding: 10 }}>Delete</div>
-  </div>
-) : null;
+class Menu extends PureComponent {
 
-export default withStore('layoutState', 'contextMenu')(Menu);
+  componentDidMount() {
+      window.addEventListener('click', this.clickHandler);
+      window.addEventListener('contextmenu', this.clickHandler);
+    }
+
+    componentWillUnmount() {
+      window.removeEventListener('click', this.clickHandler);
+      window.removeEventListener('contextmenu', this.clickHandler);
+    }
+
+    clickHandler = e => {
+      if (this.props.contextMenu) {
+        this.props.updateContextMenu();
+      }
+    }
+
+    render() {
+      const { components, contextMenu, remove, insertItem } = this.props
+      return contextMenu ? (
+        <div style={{
+          position: 'absolute',
+          top: contextMenu.y,
+          left: contextMenu.x,
+          backgroundColor: 'white',
+          boxShadow: '0 0 5px #aaa'
+        }}>
+          <div onClick={() => remove(contextMenu.id)}  style={{ cursor: 'pointer', padding: 10 }}>Delete</div>
+          { Object.keys(components).map(key => (
+            <div style={{ cursor: 'pointer', padding: 10 }} key={key} onClick={() => insertItem(contextMenu.id, key)}>
+              Insert {key}
+            </div>
+          ))}
+        </div>
+      ) : null;
+    }
+
+}
+
+const mapStateToProps = ({ layoutExtras }) => ({
+  contextMenu: layoutExtras.contextMenu,
+  components: layoutExtras.components
+});
+
+const mapDispatchToProps = dispatch => ({
+  remove: id => dispatch({ type: 'REMOVE_ITEM', id }),
+  updateContextMenu: () => dispatch({ type: 'SET_LAYOUT_EXTRA', key: 'contextMenu', value: null }),
+  insertItem: (id, key) => dispatch(insertOrMoveItem(id, 0, { type: key, props: {}, children: [] }))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -2,8 +2,7 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { DragSource } from 'react-dnd';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-
-import { LayoutState, withStore } from '../../../../src';
+import { connect } from 'react-redux';
 
 const source = {
   beginDrag(props) {
@@ -23,7 +22,9 @@ const DnDWrapper = (WrappedComponent, displayName) => {
   DnD.displayName = `DnDWrapper(${displayName})`
   hoistNonReactStatic(DnD, WrappedComponent);
 
-  return withStore('layoutState')(DragSource('Component', source, (conn, monitor) => ({
+  const mapStateToProps = ({ layoutState }) => ({ layoutState });
+
+  return connect(mapStateToProps)(DragSource('Component', source, (conn, monitor) => ({
     connectDragSource: conn.dragSource(),
     isDragging: monitor.isDragging()
   }))(DnD))
