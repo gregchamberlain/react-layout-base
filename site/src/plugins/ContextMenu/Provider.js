@@ -5,6 +5,11 @@ const Provider = (WrappedComponent, store) => {
 
   class ContextMenuProvider extends PureComponent {
 
+    constructor(props) {
+      super(props);
+      store.update('onContextMenu', this.setContextMenu);
+    }
+
     componentDidMount() {
       window.addEventListener('click', this.clickHandler);
       window.addEventListener('contextmenu', this.clickHandler);
@@ -23,22 +28,11 @@ const Provider = (WrappedComponent, store) => {
       store.update('contextMenu', { id, x: e.clientX, y: e.clientY });
     }
 
-    getChildContext() {
-      return {
-        setContextMenu: this.setContextMenu
-      }
-    }
-
-
     render() {
       return <WrappedComponent {...this.props} />
     }
 
   }
-
-  ContextMenuProvider.childContextTypes = {
-    setContextMenu: PropTypes.func
-  };
 
   hoistNonReactStatic(ContextMenuProvider, WrappedComponent);
   return ContextMenuProvider;

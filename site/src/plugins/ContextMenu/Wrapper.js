@@ -2,6 +2,8 @@ import React, { PureComponent, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
+import { withStore } from '../../../../src';
+
 const Wrapper = WrappedComponent => {
 
   class ContextMenuWrapper extends PureComponent {
@@ -32,7 +34,7 @@ const Wrapper = WrappedComponent => {
     onContextMenu = e => {
       e.preventDefault();
       e.stopPropagation();
-      this.context.setContextMenu(this.props.id, e);
+      this.props.onContextMenu(this.props.id, e);
     }
 
     render() {
@@ -49,12 +51,8 @@ const Wrapper = WrappedComponent => {
     }
   }
 
-  ContextMenuWrapper.contextTypes = {
-    setContextMenu: PropTypes.func
-  }
-
   hoistNonReactStatic(ContextMenuWrapper, WrappedComponent);
-  return ContextMenuWrapper;
+  return withStore('onContextMenu')(ContextMenuWrapper);
 
 };
 
