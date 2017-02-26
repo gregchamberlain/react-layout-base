@@ -15,7 +15,6 @@ const items = {
 
 let state = LayoutState.fromRaw(items);
 let referenceState = LayoutState.fromRaw(items);
-state.setOnChangeListener(() => {});
 let nextItem = { type: 'Test', props: {}, children: [], style: {} };
 
 describe('LayoutState', () => {

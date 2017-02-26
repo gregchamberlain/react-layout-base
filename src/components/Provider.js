@@ -21,11 +21,15 @@ class LayoutProvider extends PureComponent {
 
   static defaultProps: Object
   props: Props
-  store: Store
+  store: any
 
   constructor(props: Props) {
     super(props);
-    this.store = configureStore({
+    const reducers = {};
+    props.plugins.forEach(plugin => {
+      if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
+    });
+    this.store = configureStore(reducers, {
       layoutState: props.layoutState,
       nextLayoutState: props.layoutState,
       layoutExtras: {
@@ -34,15 +38,28 @@ class LayoutProvider extends PureComponent {
         ...this.applyPlugins(props)
       }
     });
+    this.store.subscribe(this.onStoreChange);
+  }
+
+  onStoreChange = () => {
+    const state = this.store.getState();
+    if (state.layoutState !== state.nextLayoutState) {
+      this.props.onChange(state.nextLayoutState);
+    }
   }
 
   applyPlugins = (props: Props): Object => {
     let RootWrapper = InnerWrapper;
     let RootProvider = ({ children }: { children: any }) => children;
+    let reducers = {};
     props.plugins.forEach(plugin => {
       if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
       if (plugin.Provider) RootProvider = plugin.Provider(RootProvider, this.store);
+      if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
     });
+    if (this.store) {
+      injectReducers(this.store, reducers);
+    }
     return {
       RootWrapper,
       RootProvider

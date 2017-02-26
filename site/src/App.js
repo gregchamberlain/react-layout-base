@@ -11,14 +11,8 @@ import { DnD, Style, ContextMenu, Undo } from './plugins';
 const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
 
 let defaultState: LayoutState = new LayoutState();
-defaultState.setOnChangeListener(nextState => {
-  defaultState = nextState;
-});
-defaultState.insertOrMoveItem('root', 0, item1('Item 1!'));
-defaultState.setOnChangeListener(nextState => {
-  defaultState = nextState;
-});
-defaultState.insertOrMoveItem('root', 1, item1('Item 2!'));
+defaultState = defaultState.insertOrMoveItem('root', 0, item1('Item 1!'));
+defaultState = defaultState.insertOrMoveItem('root', 1, item1('Item 2!'));
 console.log(defaultState.toRaw());
 
 const components = {
@@ -53,11 +47,7 @@ class App extends PureComponent {
 
   addItem = (e: any) => {
     e.preventDefault();
-    let layoutState;
-    this.state.layoutState.setOnChangeListener(nextState => {
-      layoutState = nextState;
-    });
-    this.state.layoutState.insertOrMoveItem('root', 0, item1(this.state.value));
+    let layoutState = this.state.layoutState.insertOrMoveItem('root', 0, item1(this.state.value));
     this.setState({ layoutState, value: '' });
   }
 
@@ -89,7 +79,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={ this.state.checked ? [DnD] : [] }
+          plugins={ this.state.checked ? [DnD, ContextMenu] : [] }
         />
       </div>
     );

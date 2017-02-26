@@ -1,8 +1,7 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-
-import { withStore } from '../../../../src';
+import { connect } from 'react-redux';
 
 const Wrapper = WrappedComponent => {
 
@@ -34,7 +33,11 @@ const Wrapper = WrappedComponent => {
     onContextMenu = e => {
       e.preventDefault();
       e.stopPropagation();
-      this.props.onContextMenu(this.props.id, e);
+      this.props.setContextMenu({
+        id: this.props.id,
+        x: e.clientX,
+        y: e.clientY,
+      });
     }
 
     render() {
@@ -52,7 +55,10 @@ const Wrapper = WrappedComponent => {
   }
 
   hoistNonReactStatic(ContextMenuWrapper, WrappedComponent);
-  return withStore('onContextMenu')(ContextMenuWrapper);
+  const mapDispatchToProps = dispatch => ({
+    setContextMenu: (val) => dispatch({ type: 'SET_LAYOUT_EXTRA', key: 'contextMenu', value: val })
+  });
+  return connect(null, mapDispatchToProps)(ContextMenuWrapper);
 
 };
 
