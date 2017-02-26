@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { insertOrMoveItem } from '../../../../src/actions';
+
 class Menu extends PureComponent {
 
   componentDidMount() {
@@ -20,7 +22,7 @@ class Menu extends PureComponent {
     }
 
     render() {
-      const { contextMenu, remove } = this.props
+      const { components, contextMenu, remove, insertItem } = this.props
       return contextMenu ? (
         <div style={{
           position: 'absolute',
@@ -30,6 +32,11 @@ class Menu extends PureComponent {
           boxShadow: '0 0 5px #aaa'
         }}>
           <div onClick={() => remove(contextMenu.id)}  style={{ cursor: 'pointer', padding: 10 }}>Delete</div>
+          { Object.keys(components).map(key => (
+            <div style={{ cursor: 'pointer', padding: 10 }} key={key} onClick={() => insertItem(contextMenu.id, key)}>
+              Insert {key}
+            </div>
+          ))}
         </div>
       ) : null;
     }
@@ -37,12 +44,14 @@ class Menu extends PureComponent {
 }
 
 const mapStateToProps = ({ layoutExtras }) => ({
-  contextMenu: layoutExtras.contextMenu
+  contextMenu: layoutExtras.contextMenu,
+  components: layoutExtras.components
 });
 
 const mapDispatchToProps = dispatch => ({
   remove: id => dispatch({ type: 'REMOVE_ITEM', id }),
-  updateContextMenu: () => dispatch({ type: 'SET_LAYOUT_EXTRA', key: 'contextMenu', value: null })
+  updateContextMenu: () => dispatch({ type: 'SET_LAYOUT_EXTRA', key: 'contextMenu', value: null }),
+  insertItem: (id, key) => dispatch(insertOrMoveItem(id, 0, { type: key, props: {}, children: [] }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

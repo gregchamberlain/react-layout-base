@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import LayoutState from '../model/LayoutState';
 import InnerWrapper from './InnerWrapper';
-import withStore from '../store/withStore';
 
 type Props = {
   id: string,

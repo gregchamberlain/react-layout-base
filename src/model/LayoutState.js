@@ -10,7 +10,7 @@ export const deepRemove = (map: LayoutState, id: string): LayoutState => {
   return map.deleteIn(['items', id]);
 };
 
-const defaultItems: Map<*> = Map({ root: {
+const defaultItems: Map<string, Object> = Map({ root: {
   id: 'root',
   type: 'Column',
   props: { },
@@ -19,10 +19,6 @@ const defaultItems: Map<*> = Map({ root: {
 }});
 
 class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
-
-  constructor() {
-    super();
-  }
 
   /**
    * Gets an item by id
@@ -53,7 +49,7 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
       idx--;
     }
     let nextState: LayoutState = this
-      .updateItem(item.parent.id, { children: { $apply: c => c.filter(id => id !== this.id) } })
+      .updateItem(item.parent.id, { children: { $apply: c => c.filter(id => id !== item.id) } })
       .updateItem(parentId, { children: { $splice: [[idx, 0, item.id]] } })
       .updateItem(item.id, { parent: { $set: { id: parentId, idx } } });
     return nextState;
@@ -64,7 +60,7 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
   }
 
   removeItem(id: string): LayoutState {
-    if (id === 'root') return;
+    if (id === 'root') return this;
     const item: Object = this.getItem(id);
     const parentId: string = item.parent.id;
     const nextState: LayoutState = this
@@ -78,8 +74,7 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
   }
 
   getSelectedItem(): ?Object {
-    const item = this.items.get(this.selectedItem);
-    return item && item.toJS();
+    return this.items.get(this.selectedItem);
   }
 
   getAncestors(id: string): Array<Object> {
@@ -100,15 +95,6 @@ class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
       key = Math.floor(Math.random() * Math.pow(2, 24)).toString(32);
     }
     return key;
-  }
-
-  setOnChangeListener(listener: Function): boolean {
-    this.listener = listener;
-    return true;
-  }
-
-  onChange(nextState: LayoutState): void {
-    this.listener(nextState);
   }
 
 }

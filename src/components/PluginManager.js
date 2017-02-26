@@ -2,8 +2,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import withStore from '../store/withStore';
-
 type Props = {
   RootProvider: Function,
   children: any,

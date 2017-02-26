@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import configureStore, { injectReducers } from '../redux';
 import LayoutState from '../model/LayoutState';
-import { setLayoutState, setExtra } from '../redux/actions';
+import { setLayoutState, setExtra } from '../actions';
 import InnerWrapper from './InnerWrapper';
 import shallowCompare from '../utils/shallowCompare';
 
