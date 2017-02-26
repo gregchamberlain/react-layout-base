@@ -32,3 +32,7 @@ export const removeItem = id => ({
   id
 });
 
+export const setSelectedItem = id => ({
+  type: SET_SELECTED_ITEM,
+  id
+});

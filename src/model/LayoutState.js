@@ -22,7 +22,7 @@ const defaultItems: Map<string, Object> = Map({ root: {
   style: { }
 }});
 
-const validateShape = items => {
+const validateShape = (items: Object): boolean => {
   if (typeof items !== 'object' || Array.isArray(items)) return false;
   if (!items['root']) return false;
   Object.keys(items).forEach(id => {
