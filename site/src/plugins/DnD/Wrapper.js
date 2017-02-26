@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { findDOMNode } from 'react-dom';
 import { DragSource } from 'react-dnd';
 import hoistNonReactStatic from 'hoist-non-react-statics';
@@ -12,12 +12,37 @@ const source = {
 
 const DnDWrapper = (WrappedComponent, displayName) => {
 
-  const DnD = ({ connectDragSource, isDragging, layoutState, pseudoRef, ...props }) => isDragging ? null : (
-    <WrappedComponent {...props} pseudoRef={instance => {
-      if (props.id !== 'root') connectDragSource(findDOMNode(instance));
-      pseudoRef(instance);
-    }} />
-  )
+  class DnD extends PureComponent {
+    componentDidMount() {
+      if (this.node) {
+        const node = findDOMNode(this.node);
+        this.display = node.style.display;
+      }
+    }
+    componentWillReceiveProps(nextProps) {
+      if (this.props.isDragging !== nextProps.isDragging) {
+        if (this.node) {
+          const node = findDOMNode(this.node);
+          if (nextProps.isDragging) {
+            node.style.display = 'none';
+          } else {
+            node.style.display = this.display;
+          }
+        }
+      }
+    }
+
+    render() {
+      const { connectDragSource, isDragging, layoutState, pseudoRef, ...props } = this.props;
+      return (
+        <WrappedComponent {...props} pseudoRef={instance => {
+          if (props.id !== 'root') connectDragSource(findDOMNode(instance));
+          this.node = instance;
+          pseudoRef(instance);
+        }} />
+      );
+    }
+  }
 
   DnD.displayName = `DnDWrapper(${displayName})`
   hoistNonReactStatic(DnD, WrappedComponent);
