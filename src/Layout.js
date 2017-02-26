@@ -10,12 +10,13 @@ type Props = {
   layoutState: LayoutState,
   onChange: ?() => void,
   components: Object,
-  plugins: ?Array<Object>
+  plugins: ?Array<Object>,
+  style: ?Object
 };
 
-const Layout = (props: Props) => (
+const Layout = ({ style, ...props}: Props) => (
   <Provider {...props}>
-    <PluginManager>
+    <PluginManager style={style}>
       <OuterWrapper id="root" />
     </PluginManager>
   </Provider>
@@ -25,7 +26,8 @@ Layout.propTypes = {
   layoutState: PropTypes.instanceOf(LayoutState).isRequired,
   onChange: PropTypes.func,
   components: PropTypes.object.isRequired,
-  plugins: PropTypes.array
+  plugins: PropTypes.array,
+  style: PropTypes.object
 };
 
 export default Layout;

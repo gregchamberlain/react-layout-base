@@ -2,16 +2,16 @@ import React from 'react';
 
 import { withStore } from '../../../../src';
 
-const Menu = ({ id, pos, layoutState }) => (
+const Menu = ({ contextMenu, layoutState }) => contextMenu ? (
   <div style={{
     position: 'absolute',
-    top: pos.y,
-    left: pos.x,
+    top: contextMenu.y,
+    left: contextMenu.x,
     backgroundColor: 'white',
-    boxShadow: '0 0 10px #444'
+    boxShadow: '0 0 5px #aaa'
   }}>
-    <div onClick={() => layoutState.removeItem(id)}  style={{ cursor: 'pointer', padding: 10 }}>Delete</div>
+    <div onClick={() => layoutState.removeItem(contextMenu.id)}  style={{ cursor: 'pointer', padding: 10 }}>Delete</div>
   </div>
-);
+) : null;
 
-export default withStore('layoutState')(Menu);
+export default withStore('layoutState', 'contextMenu')(Menu);

@@ -17,10 +17,6 @@ class OuterWrapper extends PureComponent {
 
   props: Props;
 
-  componentWillMount() {
-    console.log('mounting: ', this.props.id);
-  }
-
   render() {
 
     const { id, layoutState, components, RootWrapper } = this.props;

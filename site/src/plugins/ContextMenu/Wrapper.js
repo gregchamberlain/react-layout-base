@@ -20,6 +20,15 @@ const Wrapper = WrappedComponent => {
       }
     }
 
+    applyRef = instance => {
+      if (instance && !this.node && instance !== this.lastNode) {
+        const node = findDOMNode(instance);
+        node.addEventListener('contextmenu', this.onContextMenu);
+      }
+      this.lastNode = this.node;
+      this.node = instance;
+    }
+
     onContextMenu = e => {
       e.preventDefault();
       e.stopPropagation();
@@ -32,7 +41,8 @@ const Wrapper = WrappedComponent => {
 
       return (
         <WrappedComponent {...props} pseudoRef={instance => {
-          this.node = instance;
+          // console.log(props.id, instance);
+          this.applyRef(instance);
           pseudoRef(instance);
         }} />
       );

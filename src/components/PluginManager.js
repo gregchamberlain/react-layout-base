@@ -1,50 +1,28 @@
-import React, { PureComponent, PropTypes } from 'react';
+// @flow
+import React, { PropTypes } from 'react';
 
 import withStore from '../store/withStore';
 
-class PluginManager extends PureComponent {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      provider: ({ children }) => children
-    };
-  }
-
-  componentWillMount() {
-    this.applyPlugins(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.plugins !== this.props.plugins) {
-      // this.applyPlugins(nextProps);
-    }
-  }
-
-  applyPlugins = (props) => {
-    console.log('applying plugin providers...');
-    let provider = ({ children }) => children;
-    props.plugins.forEach(plugin => {
-      if (plugin.Provider) provider = plugin.Provider(provider);
-    });
-    provider.displayName = 'RootProvider';
-    this.setState({ provider });
-  }
-
-  render() {
-    const WrappedProvider = this.state.provider;
-    return (
-      <WrappedProvider>
-        {React.Children.only(this.props.children)}
-      </WrappedProvider>
-    );
-  }
-
+type Props = {
+  RootProvider: Function,
+  children: any,
+  plugins: Array<Object>,
+  style: ?Object
 }
 
-PluginManager.propTypes = {
-  children: PropTypes.element,
-  plugins: PropTypes.array.isRequired
+const PluginProvider: Function = ({ RootProvider, children, plugins, style }: Props): React$Element<*> => (
+  <RootProvider>
+    <div style={style}>
+      {children}
+      {plugins.map(plugin => plugin.Component ? (
+        <plugin.Component key={plugin} />
+      ) : null )}
+    </div>
+  </RootProvider>
+);
+
+PluginProvider.propTypes = {
+  RootProvider: PropTypes.func.isRequired
 }
 
-export default withStore('plugins')(PluginManager);
+export default withStore('RootProvider', 'plugins')(PluginProvider);

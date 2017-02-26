@@ -1,20 +1,9 @@
 import React, { PureComponent, PropTypes } from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
-import Menu from './Menu';
-
-const Provider = WrappedComponent => {
+const Provider = (WrappedComponent, store) => {
 
   class ContextMenuProvider extends PureComponent {
-
-    constructor() {
-      super();
-      this.state = {
-        id: null,
-        x: 0,
-        y: 0
-      }
-    }
 
     componentDidMount() {
       window.addEventListener('click', this.clickHandler);
@@ -27,11 +16,11 @@ const Provider = WrappedComponent => {
     }
 
     clickHandler = e => {
-      this.setState({ id: null });
+      store.update('contextMenu', null);
     }
 
     setContextMenu = (id, e) => {
-      this.setState({ id, x: e.clientX, y: e.clientY });
+      store.update('contextMenu', { id, x: e.clientX, y: e.clientY });
     }
 
     getChildContext() {
@@ -42,8 +31,7 @@ const Provider = WrappedComponent => {
 
 
     render() {
-      const { id, x, y } = this.state;
-      return <div><WrappedComponent {...this.props} />{ id ? <Menu id={id} pos={{ x, y }} /> : null }</div>
+      return <WrappedComponent {...this.props} />
     }
 
   }

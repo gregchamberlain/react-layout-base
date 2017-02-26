@@ -35,13 +35,16 @@ class LayoutProvider extends PureComponent {
 
   applyPlugins = (props: Props) => {
     console.log('Creating Root Wrapper...');
+    // Constructing the RootWrapper
     let RootWrapper = InnerWrapper;
+    let RootProvider = ({ children }) => children;
     props.plugins.forEach(plugin => {
-      if (plugin.Wrapper) {
-        RootWrapper = plugin.Wrapper(RootWrapper);
-      };
+      if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
+      if (plugin.Provider) RootProvider = plugin.Provider(RootProvider, this.store);
     });
     this.store.update('RootWrapper', RootWrapper);
+    this.store.update('RootProvider', RootProvider);
+    // Constructing the RootProvider
   }
 
   getChildContext() {
