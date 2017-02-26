@@ -2,7 +2,8 @@ import React, { PureComponent, PropTypes } from 'react';
 
 class ClassWrapper extends PureComponent {
   render() {
-    return React.Children.only(this.props.children);
+    const { children, ...props } = this.props;
+    return React.cloneElement(React.Children.only(children), props);
   }
 }
 

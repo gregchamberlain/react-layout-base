@@ -23,8 +23,8 @@ class OuterWrapper extends PureComponent {
     const Comp = components[item.type];
 
     return (
-      <RootWrapper pseudoRef={() => {}} id={id}>
-        <Comp {...item.props} id={id}>
+      <RootWrapper {...item.props} pseudoRef={() => {}} id={id}>
+        <Comp>
           {item.children.map(c => <Wrapper key={c} id={c} />)}
         </Comp>
       </RootWrapper>
