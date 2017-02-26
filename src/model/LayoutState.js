@@ -22,9 +22,20 @@ const defaultItems: Map<string, Object> = Map({ root: {
   style: { }
 }});
 
+const validateShape = items => {
+  if (typeof items !== 'object' || Array.isArray(items)) return false;
+  if (!items['root']) return false;
+  Object.keys(items).forEach(id => {
+    const item = items[id];
+    if (!(item.id && item.type && item.props)) return false;
+  });
+  return true;
+}
+
 class LayoutState extends Record({ items: Map(), selectedItem: null }) {
 
   constructor(type: string | Object) {
+    if (type !== 'string' && validateShape(type)) throw new Error('LayoutState must be supplied either a root Component type or items data');
     if (type instanceof Object) {
       super({ items: Map(type) });
     } else {
