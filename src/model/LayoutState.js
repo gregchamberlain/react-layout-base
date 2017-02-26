@@ -10,6 +10,10 @@ export const deepRemove = (map: LayoutState, id: string): LayoutState => {
   return map.deleteIn(['items', id]);
 };
 
+const createItems = (type: string | Object): Map<string, Object> => Map({
+  root: { id: 'root', type, props: {}, children: [] }
+});
+
 const defaultItems: Map<string, Object> = Map({ root: {
   id: 'root',
   type: 'Column',
@@ -18,7 +22,15 @@ const defaultItems: Map<string, Object> = Map({ root: {
   style: { }
 }});
 
-class LayoutState extends Record({ items: defaultItems, selectedItem: null }) {
+class LayoutState extends Record({ items: Map(), selectedItem: null }) {
+
+  constructor(type: string | Object) {
+    if (type instanceof Object) {
+      super({ items: Map(type) });
+    } else {
+      super({ items: createItems(type) });
+    }
+  }
 
   /**
    * Gets an item by id
