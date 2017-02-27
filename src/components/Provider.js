@@ -33,6 +33,7 @@ class LayoutProvider extends PureComponent {
       layoutExtras: {
         plugins: props.plugins,
         components: props.components,
+        readOnly: props.readOnly,
         RootProvider,
         RootWrapper
       }
