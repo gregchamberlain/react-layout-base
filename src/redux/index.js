@@ -1,19 +1,16 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import combineReducers from './combineReducers';
 import layoutState from './reducers/layoutState';
 import nextLayoutState from './reducers/nextLayoutState';
 import layoutExtras from './reducers/layoutExtras';
 
 export default function configureStore(reducers, initialState, middleware) {
   const store = createStore(createReducer(reducers), initialState, applyMiddleware(middleware));
-  store.dynamicReducers = reducers;
   return store;
 }
 
 export const injectReducers = (store, reducers) => {
-  Object.keys(reducers).forEach(name => {
-    store.dynamicReducers[name] = reducers[name];
-  });
-  store.replaceReducer(createReducer(store.dynamicReducers));
+  store.replaceReducer(createReducer(reducers));
 }
 
 const createReducer = (reducers) => combineReducers({

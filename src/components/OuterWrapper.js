@@ -25,7 +25,7 @@ const OuterWrapper = ({ id, item, Component, RootWrapper }: Props) => {
 OuterWrapper.propTypes = {
   id: PropTypes.string.isRequired,
   item: PropTypes.object.isRequired,
-  Component: PropTypes.func.isRequired,
+  Component: PropTypes.oneOf([PropTypes.string, PropTypes.func]).isRequired,
   RootWrapper: PropTypes.func.isRequired
 };
 
@@ -33,7 +33,7 @@ const mapStateToProps = ({ layoutState, layoutExtras }, { id }) => {
   const item = layoutState.getItem(id);
   return {
     item,
-    Component: layoutExtras.components[item.type],
+    Component: layoutExtras.components[item.type] || item.type,
     RootWrapper: layoutExtras.RootWrapper
   }
 };

@@ -42,7 +42,7 @@ const Wrapper = WrappedComponent => {
 
     render() {
 
-      const { pseudoRef, ...props } = this.props;
+      const { pseudoRef, setContextMenu, ...props } = this.props;
 
       return (
         <WrappedComponent {...props} pseudoRef={instance => {

@@ -1,8 +1,9 @@
 import LayoutState from '../../model/LayoutState';
+import * as ACTIONS from '../../actions';
 
 const layoutState = (state = new LayoutState('div'), action) => {
   switch (action.type) {
-    case 'SET_LAYOUT_STATE':
+    case ACTIONS.SET_LAYOUT_STATE:
       return action.layoutState;
     default:
       return state;

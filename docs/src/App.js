@@ -8,7 +8,7 @@ import Column from './components/Column';
 
 import { DnD, Style, ContextMenu, Hover } from './plugins';
 
-const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
+const item1 = text => ({ type: 'div', props: { style: { height: 10, background: 'cyan'} }, style: {}, children: [] });
 
 let defaultState: LayoutState = new LayoutState('Column');
 defaultState = defaultState.insertOrMoveItem('root', 0, item1('Item 1!'));
