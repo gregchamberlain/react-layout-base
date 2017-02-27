@@ -35,7 +35,12 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 3000,
-    historyApiFallback: true,
+    historyApiFallback: {
+      rewrites: [
+        // shows views/landing.html as the landing page
+        { from: /^\/$/, to: 'dev.html' },
+      ],
+    },
     hot: true
   }
   
