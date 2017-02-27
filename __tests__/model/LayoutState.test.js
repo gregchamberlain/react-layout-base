@@ -16,11 +16,26 @@ const items = {
 
 const ids = new Set(['root', 'item1', 'item2', 'item3']);
 
-let state = LayoutState.fromRaw(items);
-let referenceState = LayoutState.fromRaw(items);
+// let state = LayoutState.fromRaw(items);
+// let referenceState = LayoutState.fromRaw(items);
+let state = new LayoutState(items);
+let referenceState = new LayoutState(items);
 let nextItem = { type: 'Test', props: {}, children: [], style: {} };
 
 describe('LayoutState', () => {
+
+  describe('INITIALIZE', () => {
+    it('does not throw an error when supplied a component type', () => {
+      expect(() => { new LayoutState('div') }).not.toThrow();
+    })
+    it('does not throw an error when supplied item state', () => {
+      const items = { root: { id: 'root', type: 'div', props: {}, children: [] } };
+      expect(() => { new LayoutState(items) }).not.toThrow();
+    })
+    it('throws an error when supplied nothing', () => {
+      expect(() => { new LayoutState() }).toThrow();
+    })
+  })
 
   describe('#insertOrMoveItem', () => {
     let oldInsert = state.insertItem;

@@ -3,6 +3,7 @@
 /node_modules/
 /tests/
 /scripts/
+/coverage/
 /.vscode/
 .babelrc
 .eslintrc

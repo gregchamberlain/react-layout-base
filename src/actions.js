@@ -1,3 +1,4 @@
+export const SET_LAYOUT_STATE = 'LAYOUT_STATE_SET_LAYOUT_STATE';
 export const INSERT_OR_MOVE_ITEM = 'LAYOUT_STATE_INSERT_OR_MOVE_ITEM';
 export const REMOVE_ITEM = 'LAYOUT_STATE_REMOVE_ITEM';
 export const UPDATE_ITEM = 'LAYOUT_STATE_UPDATE_ITEM';
@@ -10,7 +11,7 @@ export const setExtra = (key, value) => ({
 });
 
 export const setLayoutState = layoutState => ({
-  type: 'SET_LAYOUT_STATE',
+  type: SET_LAYOUT_STATE,
   layoutState
 });
 

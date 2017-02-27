@@ -35,7 +35,9 @@ const validateShape = (items: Object): boolean => {
 class LayoutState extends Record({ items: Map(), selectedItem: null }) {
 
   constructor(type: string | Object) {
-    if (type !== 'string' && validateShape(type)) throw new Error('LayoutState must be supplied either a root Component type or items data');
+    if (!(typeof type === 'string' || validateShape(type))) {
+      throw new Error('LayoutState must be supplied either a root Component type or items data');
+    }
     if (type instanceof Object) {
       super({ items: Map(type) });
     } else {
@@ -121,10 +123,5 @@ class LayoutState extends Record({ items: Map(), selectedItem: null }) {
   }
 
 }
-
-LayoutState.fromRaw = (raw: Object): LayoutState => {
-  let layoutState: LayoutState = new LayoutState();
-  return layoutState.set('items', Map(raw));
-};
 
 export default LayoutState;
