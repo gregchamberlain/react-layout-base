@@ -8,13 +8,13 @@ var InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 module.exports = {
 
   entry: {
-    bundle: './site/src/index.js',
+    bundle: './docs/src/index.js',
   },
 
   output: {
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].js',
-    path: path.resolve(__dirname, 'site', 'dist')
+    path: path.resolve(__dirname, 'docs', 'dist')
   },
 
   plugins: [
@@ -47,9 +47,9 @@ module.exports = {
       }
     }),
     new HtmlWebpackPlugin({
-      template: './index.ejs',
+      template: './docs/src/index.ejs',
       title: 'React Pluggable Layout',
-      filename: '../../index.html'
+      filename: '../index.html'
     }),
     new InlineManifestWebpackPlugin({
         name: 'webpackManifest'

@@ -74,7 +74,10 @@ class App extends PureComponent {
           <button>Add Item</button>
         </form>
         <button onClick={this.printMarkup}>Print Markup</button>
-        <input type="checkbox" onChange={this.applyAddon} checked={this.state.checked} />
+        <label>
+          <input type="checkbox" onChange={this.applyAddon} checked={this.state.checked} />
+          Plugins
+        </label>
         <Layout
           layoutState={this.state.layoutState}
           onChange={this.onChange}

@@ -7,13 +7,13 @@ module.exports = {
     'react-hot-loader/patch',
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
-    './site/src/index.js'
+    './docs/src/index.js'
   ],
 
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'site', 'dist'),
-    publicPath: '/site/dist/'
+    path: path.resolve(__dirname, 'docs', 'dist'),
+    publicPath: '/docs/dist/'
   },
 
   devtool: 'cheap-module-inline-source-map',
@@ -35,12 +35,7 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 3000,
-    historyApiFallback: {
-      rewrites: [
-        // shows views/landing.html as the landing page
-        { from: /^\/$/, to: 'dev.html' },
-      ],
-    },
+    historyApiFallback: true,
     hot: true
   }
   

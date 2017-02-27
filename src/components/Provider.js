@@ -22,20 +22,25 @@ class LayoutProvider extends PureComponent {
   static defaultProps: Object
   props: Props
   store: any
+  middlewares: Array<Function>
 
   constructor(props: Props) {
     super(props);
-    const reducers = {};
-    props.plugins.forEach(plugin => {
-      if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
-    });
+    const MasterMiddleware = store => next => act => {
+      const nextMiddleware = remaining => action => remaining.length
+        ? remaining[0](store)(nextMiddleware(remaining.slice(1)))(action)
+        : next(action);
+      nextMiddleware(this.middlewares)(act);
+    };
+    const { RootProvider, RootWrapper, reducers } = this.applyPlugins(props);
     this.store = configureStore(reducers, {
       layoutState: props.layoutState,
       nextLayoutState: props.layoutState,
       layoutExtras: {
         plugins: props.plugins,
         components: props.components,
-        ...this.applyPlugins(props)
+        RootProvider,
+        RootWrapper
       }
     });
     this.store.subscribe(this.onStoreChange);
@@ -52,17 +57,17 @@ class LayoutProvider extends PureComponent {
     let RootWrapper = InnerWrapper;
     let RootProvider = ({ children }: { children: any }) => children;
     let reducers = {};
+    this.middlewares = [];
     props.plugins.forEach(plugin => {
       if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
       if (plugin.Provider) RootProvider = plugin.Provider(RootProvider, this.store);
       if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
+      if (plugin.middleware) this.middlewares.push(plugin.middleware);
     });
-    if (this.store) {
-      injectReducers(this.store, reducers);
-    }
     return {
       RootWrapper,
-      RootProvider
+      RootProvider,
+      reducers
     };
   }
 
@@ -72,9 +77,10 @@ class LayoutProvider extends PureComponent {
       this.store.dispatch(setLayoutState(nextProps.layoutState));
     }
     if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
-      const { RootWrapper, RootProvider } = this.applyPlugins(nextProps);
+      const { RootWrapper, RootProvider, reducers } = this.applyPlugins(nextProps);
       this.store.dispatch(setExtra('RootProvider', RootProvider));
       this.store.dispatch(setExtra('RootWrapper', RootWrapper));
+      injectReducers(this.store, reducers);
     }
     watched.forEach(key => {
       if (!shallowCompare(nextProps[key], this.props[key])) this.store.dispatch(setExtra(key, nextProps[key]));
