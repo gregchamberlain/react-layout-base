@@ -8,8 +8,6 @@ import Column from './components/Column';
 
 import { DnD, Style, ContextMenu, Hover } from './plugins';
 
-// Cunks
-
 const item1 = text => ({ type: 'Text', props: { text }, style: {}, children: [] });
 
 let defaultState: LayoutState = new LayoutState('Column');
