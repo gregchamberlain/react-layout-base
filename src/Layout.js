@@ -2,13 +2,12 @@
 import React, { PropTypes } from 'react';
 
 import Provider from './components/Provider';
-import PluginManager from './components/PluginManager';
-import OuterWrapper from './components/OuterWrapper';
+import RootLayout from './components/RootLayout';
 import LayoutState from './model/LayoutState';
 
 type Props = {
   layoutState: LayoutState,
-  onChange: ?() => void,
+  onChange: () => void,
   components: Object,
   plugins: ?Array<Object>,
   style: ?Object
@@ -16,9 +15,7 @@ type Props = {
 
 const Layout = ({ style, ...props}: Props) => (
   <Provider {...props}>
-    <PluginManager style={style} plugins={props.plugins}>
-      <OuterWrapper id="root" />
-    </PluginManager>
+    <RootLayout style={style} />
   </Provider>
 );
 

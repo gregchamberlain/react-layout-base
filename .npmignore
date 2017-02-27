@@ -1,10 +1,13 @@
 /src/
-/site/
+/docs/
 /node_modules/
 /tests/
+/scripts/
+/.vscode/
 .babelrc
 .eslintrc
 .gitignore
 index.html
 webpack.config.js
 webpack.config.prod.js
+webpack.config.site.js

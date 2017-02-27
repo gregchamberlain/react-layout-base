@@ -12,32 +12,45 @@ type Props = {
   RootWrapper: ReactClass<*>
 };
 
-class OuterWrapper extends PureComponent {
+const OuterWrapper = ({ id, layoutState, components, RootWrapper }: Props) => {
+  const item = layoutState.getItem(id);
+  const Comp = components[item.type];
+  return (
+    <RootWrapper {...item.props} pseudoRef={() => {}} id={id}>
+      <Comp>
+        {item.children.map(c => <Wrapper key={c} id={c} />)}
+      </Comp>
+    </RootWrapper>
+  )
+};
 
-  props: Props;
+// class OuterWrapper extends PureComponent {
 
-  render() {
+//   props: Props;
 
-    const { id, layoutState, components, RootWrapper } = this.props;
-    const item = layoutState.getItem(id);
-    const Comp = components[item.type];
+//   render() {
 
-    return (
-      <RootWrapper {...item.props} pseudoRef={() => {}} id={id}>
-        <Comp>
-          {item.children.map(c => <Wrapper key={c} id={c} />)}
-        </Comp>
-      </RootWrapper>
-    );
+//     const { id, layoutState, components, RootWrapper } = this.props;
+//     const item = layoutState.getItem(id);
+//     const Comp = components[item.type];
 
-  }
+//     return (
+//       <RootWrapper {...item.props} pseudoRef={() => {}} id={id}>
+//         <Comp>
+//           {item.children.map(c => <Wrapper key={c} id={c} />)}
+//         </Comp>
+//       </RootWrapper>
+//     );
 
-}
+//   }
+
+// }
 
 OuterWrapper.propTypes = {
   id: PropTypes.string.isRequired,
   layoutState: PropTypes.instanceOf(LayoutState).isRequired,
   components: PropTypes.object.isRequired,
+  RootWrapper: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ layoutState, layoutExtras }) => ({

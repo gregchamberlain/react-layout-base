@@ -2,7 +2,7 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { Provider } from 'react-redux';
 
-import configureStore, { injectReducers } from '../redux';
+import configureStore, { injectReducers, createMiddleware } from '../redux';
 import LayoutState from '../model/LayoutState';
 import { setLayoutState, setExtra } from '../actions';
 import InnerWrapper from './InnerWrapper';
@@ -22,17 +22,11 @@ class LayoutProvider extends PureComponent {
   static defaultProps: Object
   props: Props
   store: any
-  middlewares: Array<Function>
 
   constructor(props: Props) {
     super(props);
-    const MasterMiddleware = store => next => act => {
-      const nextMiddleware = remaining => action => remaining.length
-        ? remaining[0](store)(nextMiddleware(remaining.slice(1)))(action)
-        : next(action);
-      nextMiddleware(this.middlewares)(act);
-    };
-    const { RootProvider, RootWrapper, reducers } = this.applyPlugins(props);
+    const { RootProvider, RootWrapper, reducers, middlewares } = this.applyPlugins(props);
+    const { MasterMiddleware, injectMiddlewares } = createMiddleware(middlewares);
     this.store = configureStore(reducers, {
       layoutState: props.layoutState,
       nextLayoutState: props.layoutState,
@@ -42,7 +36,8 @@ class LayoutProvider extends PureComponent {
         RootProvider,
         RootWrapper
       }
-    });
+    }, MasterMiddleware);
+    this.store.injectMiddlewares = injectMiddlewares;
     this.store.subscribe(this.onStoreChange);
   }
 
@@ -57,17 +52,18 @@ class LayoutProvider extends PureComponent {
     let RootWrapper = InnerWrapper;
     let RootProvider = ({ children }: { children: any }) => children;
     let reducers = {};
-    this.middlewares = [];
+    let middlewares = [];
     props.plugins.forEach(plugin => {
       if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
       if (plugin.Provider) RootProvider = plugin.Provider(RootProvider, this.store);
       if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
-      if (plugin.middleware) this.middlewares.push(plugin.middleware);
+      if (plugin.middleware) middlewares.push(plugin.middleware);
     });
     return {
       RootWrapper,
       RootProvider,
-      reducers
+      reducers,
+      middlewares
     };
   }
 
@@ -77,10 +73,11 @@ class LayoutProvider extends PureComponent {
       this.store.dispatch(setLayoutState(nextProps.layoutState));
     }
     if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
-      const { RootWrapper, RootProvider, reducers } = this.applyPlugins(nextProps);
+      const { RootWrapper, RootProvider, reducers, middlewares } = this.applyPlugins(nextProps);
       this.store.dispatch(setExtra('RootProvider', RootProvider));
       this.store.dispatch(setExtra('RootWrapper', RootWrapper));
       injectReducers(this.store, reducers);
+      this.store.injectMiddlewares(middlewares);
     }
     watched.forEach(key => {
       if (!shallowCompare(nextProps[key], this.props[key])) this.store.dispatch(setExtra(key, nextProps[key]));
