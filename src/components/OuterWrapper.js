@@ -25,7 +25,7 @@ const OuterWrapper = ({ id, item, Component, RootWrapper }: Props) => {
 OuterWrapper.propTypes = {
   id: PropTypes.string.isRequired,
   item: PropTypes.object.isRequired,
-  Component: PropTypes.oneOf([PropTypes.string, PropTypes.func]).isRequired,
+  Component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
   RootWrapper: PropTypes.func.isRequired
 };
 
