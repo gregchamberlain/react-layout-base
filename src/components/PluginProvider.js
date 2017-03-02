@@ -14,7 +14,7 @@ const PluginProvider: Function = ({ RootProvider, plugins, style, children, ...p
     <div style={style}>
       {children}
       { plugins.map(plugin => plugin.Component ? (
-        <plugin.Component key={plugin} />
+        <plugin.Component key={plugin.Name} />
       ) : null )}
     </div>
   </RootProvider>

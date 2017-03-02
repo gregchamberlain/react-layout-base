@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import combineReducers from './combineReducers';
 import layoutState from './reducers/layoutState';
-import nextLayoutState from './reducers/nextLayoutState';
 import layoutExtras from './reducers/layoutExtras';
 
 export default function configureStore(reducers, initialState, middleware) {
@@ -16,7 +15,6 @@ export const injectReducers = (store, reducers) => {
 const createReducer = (reducers) => combineReducers({
   ...reducers,
   layoutState,
-  nextLayoutState,
   layoutExtras
 });
 

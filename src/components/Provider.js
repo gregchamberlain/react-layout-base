@@ -40,14 +40,6 @@ class LayoutProvider extends PureComponent {
       }
     }, MasterMiddleware);
     this.store.injectMiddlewares = injectMiddlewares;
-    this.store.subscribe(this.onStoreChange);
-  }
-
-  onStoreChange = () => {
-    const state = this.store.getState();
-    if (state.layoutState !== state.nextLayoutState) {
-      this.props.onChange(state.nextLayoutState);
-    }
   }
 
   applyPlugins = (props: Props): Object => {
