@@ -1,15 +1,17 @@
-import reducer from '../../../src/plugins/Edit/reducer';
-
 import { is } from 'immutable';
 
+import factory from '../../../src/plugins/Edit';
 import LayoutState from '../../../src/model/LayoutState';
 import * as actions from '../../../src/plugins/Edit/actions';
+
+
+const reducer = factory({ layoutState: new LayoutState('div') }).reducer;
 
 const item = { type: 'test', props: {}, children: [] };
 
 describe('Edit Plugin Reducer', () => {
 
-  it('returns the default state', () => {
+  it('used the default state from props.layoutState', () => {
     expect(reducer(undefined, {})).toEqual(new LayoutState('div'))
   })
 
