@@ -1,10 +1,13 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import combineReducers from './combineReducers';
 import layoutState from './reducers/layoutState';
 import layoutExtras from './reducers/layoutExtras';
 
-export default function configureStore(reducers, initialState, middleware) {
-  const store = createStore(createReducer(reducers), initialState, applyMiddleware(middleware));
+const composeEnhancers = typeof window === 'object' &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
+
+export default function configureStore(reducers, initialState, middlewares) {
+  const store = createStore(createReducer(reducers), initialState, composeEnhancers(applyMiddleware(middlewares)));
   return store;
 }
 
