@@ -1,16 +1,29 @@
+import reducer from '../../../src/plugins/Edit/reducer';
+
 import { is } from 'immutable';
 
 import LayoutState from '../../../src/model/LayoutState';
-import reducer from '../../../src/redux/reducers/nextLayoutState';
-import * as actions from '../../../src/actions';
+import * as actions from '../../../src/plugins/Edit/actions';
 
 const item = { type: 'test', props: {}, children: [] };
 
-describe('nextLayoutState Reducer', () => {
+describe('Edit Plugin Reducer', () => {
 
   it('returns the default state', () => {
     expect(reducer(undefined, {})).toEqual(new LayoutState('div'))
   })
+
+  describe('SET_LAYOUT_STATE', () => {
+    const newState = new LayoutState('span');
+    const action = {
+      type: actions.SET_LAYOUT_STATE,
+      layoutState: newState
+    }
+    const state = new LayoutState('div');
+    it('replaces the entire state', () => {
+      expect(reducer(state, action)).toEqual(newState);
+    })
+  });
 
   describe('INSERT_OR_MOVE_ITEM', () => {
 
@@ -43,19 +56,54 @@ describe('nextLayoutState Reducer', () => {
       const items = {
         root: { id: 'root', type: 'div', props: {}, children: ['item1', 'item2'] },
         item1: { id: 'item1', type: 'div', props: {}, children: [], parent: { id: 'root', idx: 0 } },
-        item2: { id: 'item2', type: 'div', props: {}, children: [], parent: { id: 'root', idx: 1 } },
+        item2: { id: 'item2', type: 'div', props: {}, children: ['item3'], parent: { id: 'root', idx: 1 } },
+        item3: { id: 'item3', type: 'div', props: {}, children: [], parent: { id: 'item2', idx: 0 } },
       };
+     
+      const state = new LayoutState(items);
+
       const action = {
         type: actions.INSERT_OR_MOVE_ITEM,
-        parentId: 'item1',
-        idx: 0,
-        item: items['item2']
+        parentId: 'item2',
+        idx: 1,
+        item: items['item1']
       };
-      const state = new LayoutState(items);
+
       const result = reducer(state, action);
+
+      it('removes the itemId from the old parent/idx location', () => {
+        expect(result.getItem('root').children[0]).not.toEqual('item1');
+      })
+
+      it('adds the itemId to the new parent/idx location', () => {
+        expect(result.getItem('item2').children[1]).toEqual('item1');
+      });
+
+      it('updates the items parent references', () => {
+        const parentRef = result.getItem('item1').parent;
+        expect(parentRef.id).toEqual('item2')
+        expect(parentRef.idx).toEqual(1);
+      })
     })
 
-  })
+  });
+
+  describe('UPDATE_ITEM', () => {
+    const action = {
+      type: actions.UPDATE_ITEM,
+      id: 'root',
+      updater: { props: { test: { $set: 15 } } }
+    };
+    const state = new LayoutState('div');
+    const result = reducer(state, action);
+    it('updates the item', () => {
+      expect(result.getItem('root').props.test).toEqual(15);
+    });
+    it('returns a new layoutState', () => {
+      expect(result instanceof LayoutState).toBe(true);
+      expect(result).not.toBe(state);
+    })
+  });
 
   describe('REMOVE_ITEM', () => {
     const items = {
@@ -76,33 +124,8 @@ describe('nextLayoutState Reducer', () => {
       expect(result.getItem('item2')).toBeUndefined();
     })
     it('removes the item from the parents children', () => {
-      expect(result.getItem('root').children[0]).toBeUndefined();
+      expect(result.getItem('root').children).toEqual([]);
     })
   });
 
-  describe('UPDATE_ITEM', () => {
-    const action = {
-      type: actions.UPDATE_ITEM,
-      id: 'root',
-      updater: { props: { test: { $set: 15 } } }
-    };
-    const state = new LayoutState('div');
-    const result = reducer(state, action);
-    it('updates the item', () => {
-      expect(result.getItem('root').props.test).toEqual(15);
-    })
-  });
-
-  describe('SET_LAYOUT_STATE', () => {
-    const newState = new LayoutState('span');
-    const action = {
-      type: actions.SET_LAYOUT_STATE,
-      layoutState: newState
-    }
-    const state = new LayoutState('div');
-    it('replaces the entire state', () => {
-      expect(reducer(state, action)).toEqual(newState);
-    })
-  })
-
-})
+});

@@ -3,7 +3,7 @@ import React, { PureComponent, PropTypes } from 'react';
 // Wraps the Component in a React Class so refs can always be applied
 class ClassWrapper extends PureComponent {
   render() {
-    const { children, ...props } = this.props;
+    const { children, dispatch, ...props } = this.props;
     return React.cloneElement(React.Children.only(children), props);
   }
 }

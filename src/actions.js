@@ -1,11 +1,8 @@
 export const SET_LAYOUT_STATE = 'LAYOUT_STATE_SET_LAYOUT_STATE';
-export const INSERT_OR_MOVE_ITEM = 'LAYOUT_STATE_INSERT_OR_MOVE_ITEM';
-export const REMOVE_ITEM = 'LAYOUT_STATE_REMOVE_ITEM';
-export const UPDATE_ITEM = 'LAYOUT_STATE_UPDATE_ITEM';
-export const SET_SELECTED_ITEM = 'LAYOUT_STATE_SET_SELECTED_ITEM';
+export const SET_LAYOUT_EXTRA = 'SET_LAYOUT_EXTRA';
 
 export const setExtra = (key, value) => ({
-  type: 'SET_LAYOUT_EXTRA',
+  type: SET_LAYOUT_EXTRA,
   key,
   value
 });
@@ -13,27 +10,4 @@ export const setExtra = (key, value) => ({
 export const setLayoutState = layoutState => ({
   type: SET_LAYOUT_STATE,
   layoutState
-});
-
-export const insertOrMoveItem = (parentId, idx, item) => ({
-  type: INSERT_OR_MOVE_ITEM,
-  parentId,
-  idx,
-  item
-});
-
-export const updateItem = (id, updater) => {
-  type: UPDATE_ITEM,
-  id,
-  updater
-}
-
-export const removeItem = id => ({
-  type: REMOVE_ITEM,
-  id
-});
-
-export const setSelectedItem = id => ({
-  type: SET_SELECTED_ITEM,
-  id
 });

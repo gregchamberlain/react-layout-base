@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { insertOrMoveItem } from '../../../../src/actions';
+import { insertOrMoveItem } from '../../../../src/plugins/Edit/actions';
 
 class Menu extends PureComponent {
 

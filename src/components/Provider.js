@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 
 import configureStore, { injectReducers, createMiddleware } from '../redux';
 import LayoutState from '../model/LayoutState';
+import PluginProvider from './PluginProvider';
 import { setLayoutState, setExtra } from '../actions';
 import InnerWrapper from './InnerWrapper';
 import shallowCompare from '../utils/shallowCompare';
@@ -39,14 +40,6 @@ class LayoutProvider extends PureComponent {
       }
     }, MasterMiddleware);
     this.store.injectMiddlewares = injectMiddlewares;
-    this.store.subscribe(this.onStoreChange);
-  }
-
-  onStoreChange = () => {
-    const state = this.store.getState();
-    if (state.layoutState !== state.nextLayoutState) {
-      this.props.onChange(state.nextLayoutState);
-    }
   }
 
   applyPlugins = (props: Props): Object => {
@@ -88,7 +81,7 @@ class LayoutProvider extends PureComponent {
   render() {
     return (
       <Provider store={this.store}>
-        {React.Children.only(this.props.children)}
+        <PluginProvider {...this.props} />
       </Provider>
     );
   }
@@ -100,8 +93,6 @@ LayoutProvider.propTypes = {
   onChange: PropTypes.func.isRequired,
   components: PropTypes.object.isRequired,
   plugins: PropTypes.array,
-  readOnly: PropTypes.bool,
-  children: PropTypes.element
 };
 
 LayoutProvider.defaultProps = {

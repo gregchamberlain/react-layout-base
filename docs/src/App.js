@@ -7,6 +7,7 @@ import Text from './components/Text';
 import Column from './components/Column';
 
 import { DnD, Style, ContextMenu, Hover } from './plugins';
+import Edit from '../../src/plugins/Edit';
 
 const item1 = text => ({ type: 'div', props: { style: { minHeight: 20, margin: 5, background: '#b535e5' } }, style: {}, children: [] });
 
@@ -82,7 +83,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={ this.state.checked ? [DnD, ContextMenu, Hover] : [] }
+          plugins={ this.state.checked ? [Edit, DnD, ContextMenu, Hover] : [] }
         />
       </div>
     );
