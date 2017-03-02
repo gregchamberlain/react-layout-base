@@ -115,17 +115,25 @@ describe('Edit Plugin Reducer', () => {
       type: actions.REMOVE_ITEM,
       id: 'item1'
     };
+    const action2 = {
+      type: actions.REMOVE_ITEM,
+      id: 'root'
+    };
     const state = new LayoutState(items);
     const result = reducer(state, action);
+    const result2 = reducer(state, action2);
     it('removes the item', () => {
       expect(result.getItem('item1')).toBeUndefined();
     });
     it('removes the items children', () => {
       expect(result.getItem('item2')).toBeUndefined();
-    })
+    });
     it('removes the item from the parents children', () => {
       expect(result.getItem('root').children).toEqual([]);
-    })
+    });
+    it('does not remove the root element', () => {
+      expect(result2.getItem('root')).not.toBeUndefined();
+    });
   });
 
 });

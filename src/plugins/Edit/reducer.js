@@ -35,6 +35,7 @@ const Reducer = (state: LayoutState = new LayoutState('div'), action: Object): L
     case ACTIONS.UPDATE_ITEM:
       return state.updateIn(['items', action.id], item => update(item, action.updater));
     case ACTIONS.REMOVE_ITEM:
+      if (action.id === 'root') return state;
       let children = [action.id]; 
       let parentRef = state.getIn(['items', action.id]).parent;
       nextState = state.updateIn(['items', parentRef.id], item => update(item, {
