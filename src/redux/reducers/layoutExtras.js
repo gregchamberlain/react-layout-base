@@ -3,7 +3,11 @@ import update from 'immutability-helper';
 const layoutExtras = (state = {}, action) => {
   switch (action.type) {
     case 'SET_LAYOUT_EXTRA':
-      return update(state, { [action.key]: { $set: action.value } });
+      let nextState = state;
+      Object.keys(action.pairs).forEach(key => {
+        nextState = update(nextState, { [key]: { $set: action.pairs[key] } })
+      });
+      return nextState;
     default:
       return state;
   }

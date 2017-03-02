@@ -1,10 +1,9 @@
 export const SET_LAYOUT_STATE = 'LAYOUT_STATE_SET_LAYOUT_STATE';
 export const SET_LAYOUT_EXTRA = 'SET_LAYOUT_EXTRA';
 
-export const setExtra = (key, value) => ({
+export const setExtra = (pairs) => ({
   type: SET_LAYOUT_EXTRA,
-  key,
-  value
+  pairs
 });
 
 export const setLayoutState = layoutState => ({

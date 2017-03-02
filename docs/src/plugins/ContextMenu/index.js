@@ -1,8 +1,8 @@
 import Wrapper from './Wrapper';
 import Menu from './Menu';
 
-export default {
+export default () => ({
   Name: 'contextMenu',
   Wrapper,
   Component: Menu,
-};
+});

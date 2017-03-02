@@ -4,7 +4,7 @@ import { Map } from 'immutable';
 import update from 'immutability-helper';
 import * as ACTIONS from './actions';
 
-const Reducer = (state: LayoutState = new LayoutState('div'), action: Object): LayoutState => {
+const Reducer = (layoutstate: LayoutState) => (state: LayoutState = layoutstate, action: Object): LayoutState => {
   let nextState;
   switch (action.type) {
     case ACTIONS.SET_LAYOUT_STATE:

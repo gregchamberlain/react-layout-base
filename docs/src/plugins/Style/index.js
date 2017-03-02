@@ -1,5 +1,5 @@
 import Wrapper from './Wrapper';
 
-export default {
+export default () => ({
   Wrapper
-};
+});

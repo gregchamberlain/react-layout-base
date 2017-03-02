@@ -8,12 +8,13 @@ import PluginProvider from './PluginProvider';
 import { setLayoutState, setExtra } from '../actions';
 import InnerWrapper from './InnerWrapper';
 import shallowCompare from '../utils/shallowCompare';
+import processPlugins from '../utils/processPlugins';
 
 type Props = {
   layoutState: LayoutState,
   onChange: () => void,
   components: Object,
-  plugins: Array<Object>,
+  plugins: Array<Function>,
   readOnly: ?boolean,
   children: Array<Object>
 }
@@ -26,13 +27,13 @@ class LayoutProvider extends PureComponent {
 
   constructor(props: Props) {
     super(props);
-    const { RootProvider, RootWrapper, reducers, middlewares } = this.applyPlugins(props);
+    const { RootProvider, RootWrapper, reducers, middlewares } = processPlugins(props);
     const { MasterMiddleware, injectMiddlewares } = createMiddleware(middlewares);
     this.store = configureStore(reducers, {
       layoutState: props.layoutState,
       nextLayoutState: props.layoutState,
       layoutExtras: {
-        plugins: props.plugins,
+        plugins: props.plugins.map(plugin => plugin(props)),
         components: props.components,
         readOnly: props.readOnly,
         RootProvider,
@@ -42,39 +43,23 @@ class LayoutProvider extends PureComponent {
     this.store.injectMiddlewares = injectMiddlewares;
   }
 
-  applyPlugins = (props: Props): Object => {
-    let RootWrapper = InnerWrapper;
-    let RootProvider = ({ children }: { children: any }) => children;
-    let reducers = {};
-    let middlewares = [];
-    props.plugins.forEach(plugin => {
-      if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
-      if (plugin.Provider) RootProvider = plugin.Provider(RootProvider, this.store);
-      if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
-      if (plugin.middleware) middlewares.push(plugin.middleware);
-    });
-    return {
-      RootWrapper,
-      RootProvider,
-      reducers,
-      middlewares
-    };
-  }
-
   componentWillReceiveProps(nextProps: Props) {
     const watched = ['components', 'readOnly'];
     if (nextProps.layoutState !== this.props.layoutState) {
       this.store.dispatch(setLayoutState(nextProps.layoutState));
     }
     if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
-      const { RootWrapper, RootProvider, reducers, middlewares } = this.applyPlugins(nextProps);
-      this.store.dispatch(setExtra('RootProvider', RootProvider));
-      this.store.dispatch(setExtra('RootWrapper', RootWrapper));
+      const { RootWrapper, RootProvider, reducers, middlewares } = processPlugins(nextProps);
+      this.store.dispatch(setExtra({
+        plugins: nextProps.plugins.map(plugin => plugin(nextProps)),
+        RootProvider,
+        RootWrapper
+      }));
       injectReducers(this.store, reducers);
       this.store.injectMiddlewares(middlewares);
     }
     watched.forEach(key => {
-      if (!shallowCompare(nextProps[key], this.props[key])) this.store.dispatch(setExtra(key, nextProps[key]));
+      if (!shallowCompare(nextProps[key], this.props[key])) this.store.dispatch(setExtra({ [key]: nextProps[key] }));
     });
   }
 

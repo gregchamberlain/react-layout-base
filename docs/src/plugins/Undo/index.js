@@ -1,5 +1,5 @@
 import Provider from './Provider';
 
-export default {
+export default () => ({
   Provider
-};
+});
