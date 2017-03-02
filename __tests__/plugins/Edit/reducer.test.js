@@ -45,8 +45,7 @@ describe('Edit Plugin Reducer', () => {
       })
 
       it('adds a reference to the parent', () => {
-        expect(newItem.parent.id).toEqual('root');
-        expect(newItem.parent.idx).toEqual(0);
+        expect(newItem.parent).toEqual('root');
       })
 
       it('adds it to the parent', () => {
@@ -57,9 +56,9 @@ describe('Edit Plugin Reducer', () => {
     describe('moves an existing item', () => {
       const items = {
         root: { id: 'root', type: 'div', props: {}, children: ['item1', 'item2'] },
-        item1: { id: 'item1', type: 'div', props: {}, children: [], parent: { id: 'root', idx: 0 } },
-        item2: { id: 'item2', type: 'div', props: {}, children: ['item3'], parent: { id: 'root', idx: 1 } },
-        item3: { id: 'item3', type: 'div', props: {}, children: [], parent: { id: 'item2', idx: 0 } },
+        item1: { id: 'item1', type: 'div', props: {}, children: [], parent: 'root' },
+        item2: { id: 'item2', type: 'div', props: {}, children: ['item3'], parent: 'root' },
+        item3: { id: 'item3', type: 'div', props: {}, children: [], parent: 'item2' },
       };
      
       const state = new LayoutState(items);
@@ -83,8 +82,7 @@ describe('Edit Plugin Reducer', () => {
 
       it('updates the items parent references', () => {
         const parentRef = result.getItem('item1').parent;
-        expect(parentRef.id).toEqual('item2')
-        expect(parentRef.idx).toEqual(1);
+        expect(parentRef).toEqual('item2');
       })
     })
 
@@ -110,8 +108,8 @@ describe('Edit Plugin Reducer', () => {
   describe('REMOVE_ITEM', () => {
     const items = {
       root: { id: 'root', type: 'div', props: {}, children: ['item1'] },
-      item1: { id: 'item1', type: 'div', props: {}, children: ['item2'], parent: { id: 'root', idx: 0 } },
-      item2: { id: 'item2', type: 'div', props: {}, children: [], parent: { id: 'item1', idx: 0 } },
+      item1: { id: 'item1', type: 'div', props: {}, children: ['item2'], parent: 'root' },
+      item2: { id: 'item2', type: 'div', props: {}, children: [], parent: 'item1' },
     };
     const action = {
       type: actions.REMOVE_ITEM,

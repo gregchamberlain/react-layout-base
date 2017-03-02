@@ -13,10 +13,10 @@ const Reducer = (layoutstate: LayoutState) => (state: LayoutState = layoutstate,
       if (action.item.id) {
         // Item already exists, MOVE_ITEM
         const oldParent = state.getItem(action.item.id).parent; 
-        action.item.parent = { id: action.parentId, idx: action.idx };
+        action.item.parent = action.parentId;
         nextState = state
-          .updateIn(['items', oldParent.id], item => update(item, {
-            children: { $splice: [[oldParent.idx, 1]] }
+          .updateIn(['items', oldParent], item => update(item, {
+            children: { $apply: c => c.filter(cId => cId !== action.item.id) }
           }))
           .updateIn(['items', action.parentId], item => update(item, {
             children: { $splice: [[action.idx, 0, action.item.id]] }
@@ -24,7 +24,7 @@ const Reducer = (layoutstate: LayoutState) => (state: LayoutState = layoutstate,
       } else {
         // Item doesnt exist, INSERT_ITEM
         action.item.id = generateRandomKey(state.items);
-        action.item.parent = { id: action.parentId, idx: action.idx };
+        action.item.parent = action.parentId;
         nextState = state
           .setIn(['items', action.item.id], action.item)
           .updateIn(['items', action.parentId], item => update(item, {
@@ -37,9 +37,9 @@ const Reducer = (layoutstate: LayoutState) => (state: LayoutState = layoutstate,
     case ACTIONS.REMOVE_ITEM:
       if (action.id === 'root') return state;
       let children = [action.id]; 
-      let parentRef = state.getIn(['items', action.id]).parent;
-      nextState = state.updateIn(['items', parentRef.id], item => update(item, {
-        children: { $splice: [[parentRef.idx, 1]] }
+      let parentRef = state.getItem(action.id).parent;
+      nextState = state.updateIn(['items', parentRef], item => update(item, {
+        children: { $apply: children => children.filter(cId => cId !== action.id) }
       }));
       while (children.length) {
         const id = children.pop();

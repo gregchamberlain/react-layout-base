@@ -31,6 +31,10 @@ OuterWrapper.propTypes = {
 
 const mapStateToProps = ({ layoutState, layoutExtras }, { id }) => {
   const item = layoutState.getItem(id);
+  if (item === undefined) {
+    console.log('id', id);
+    console.log(layoutState.items.toJS());
+  }
   return {
     item,
     Component: layoutExtras.components[item.type] || item.type,

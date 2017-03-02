@@ -62,7 +62,7 @@ class LayoutState extends Record({ items: Map(), selectedItem: null }) {
 
   insertItem(parentId: string, idx: number, item: Object): Object {
     item.id = this.generateRandomKey();
-    item.parent = { id: parentId, idx: idx };
+    item.parent = parentId;
     let nextState: LayoutState = this
       .setIn(['items', item.id], item)
       .updateItem(parentId, { children: { $splice: [[idx, 0, item.id]] } });
@@ -70,13 +70,10 @@ class LayoutState extends Record({ items: Map(), selectedItem: null }) {
   }
 
   moveItem(parentId: string, idx: number, item: Object): Object {
-    if (parentId === item.parent.id && idx > item.parent.idx) {
-      idx--;
-    }
     let nextState: LayoutState = this
-      .updateItem(item.parent.id, { children: { $apply: c => c.filter(id => id !== item.id) } })
+      .updateItem(item.parent, { children: { $apply: c => c.filter(id => id !== item.id) } })
       .updateItem(parentId, { children: { $splice: [[idx, 0, item.id]] } })
-      .updateItem(item.id, { parent: { $set: { id: parentId, idx } } });
+      .updateItem(item.id, { parent: { $set:  parentId } });
     return nextState;
   }
 
@@ -87,9 +84,9 @@ class LayoutState extends Record({ items: Map(), selectedItem: null }) {
   removeItem(id: string): LayoutState {
     if (id === 'root') return this;
     const item: Object = this.getItem(id);
-    const parentId: string = item.parent.id;
+    const parentId: string = item.parent;
     const nextState: LayoutState = this
-    .updateItem(parentId, { children: { $apply: c => c.filter(cId => cId !== id) }});
+      .updateItem(parentId, { children: { $apply: c => c.filter(cId => cId !== id) }});
     return deepRemove(nextState, id);
   }
 
@@ -105,7 +102,7 @@ class LayoutState extends Record({ items: Map(), selectedItem: null }) {
   getAncestors(id: string): Array<Object> {
     let result: Array<Object> = [this.getItem(id)];
     while (result[0].parent && result.length < 4) {
-      result.unshift(this.getItem(result[0].parent.id));
+      result.unshift(this.getItem(result[0].parent));
     }
     return result;
   }

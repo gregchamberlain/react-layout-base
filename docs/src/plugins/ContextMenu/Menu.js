@@ -50,7 +50,7 @@ const mapStateToProps = ({ layoutExtras }) => ({
 
 const mapDispatchToProps = dispatch => ({
   remove: id => dispatch({ type: 'LAYOUT_STATE_REMOVE_ITEM', id }),
-  updateContextMenu: () => dispatch({ type: 'SET_LAYOUT_EXTRA', key: 'contextMenu', value: null }),
+  updateContextMenu: () => dispatch({ type: 'SET_LAYOUT_EXTRA', pairs: { contextMenu: null } }),
   insertItem: (id, key) => dispatch(insertOrMoveItem(id, 0, { type: key, props: {}, children: [] }))
 });
 

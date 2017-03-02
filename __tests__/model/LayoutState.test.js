@@ -3,9 +3,9 @@ import { is } from 'immutable';
 import LayoutState from '../../src/model/LayoutState';
 
 const rootItem = { id: 'root', type: 'Column', props: {}, style: {}, children: ['item1', 'item2'] };
-const item1 = { id: 'item1', type: 'Test', props: {}, style: {}, children: ['item3'], parent: { id: 'root', idx: 0 } };
-const item2 = { id: 'item2', type: 'Test', props: {}, style: {}, children: [], parent: { id: 'root', idx: 1 } };
-const item3 = { id: 'item3', type: 'Test', props: {}, style: {}, children: [], parent: { id: 'item1', idx: 0 } };
+const item1 = { id: 'item1', type: 'Test', props: {}, style: {}, children: ['item3'], parent: 'root' };
+const item2 = { id: 'item2', type: 'Test', props: {}, style: {}, children: [], parent: 'root' };
+const item3 = { id: 'item3', type: 'Test', props: {}, style: {}, children: [], parent: 'item1' };
 
 const items = {
   root: rootItem,

@@ -28,7 +28,6 @@ class LayoutProvider extends PureComponent {
   constructor(props: Props) {
     super(props);
     const { RootProvider, RootWrapper, reducers, middlewares } = processPlugins(props);
-    const { MasterMiddleware, injectMiddlewares } = createMiddleware(middlewares);
     this.store = configureStore(reducers, {
       layoutState: props.layoutState,
       nextLayoutState: props.layoutState,
@@ -39,8 +38,7 @@ class LayoutProvider extends PureComponent {
         RootProvider,
         RootWrapper
       }
-    }, MasterMiddleware);
-    this.store.injectMiddlewares = injectMiddlewares;
+    }, middlewares);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -49,13 +47,14 @@ class LayoutProvider extends PureComponent {
       this.store.dispatch(setLayoutState(nextProps.layoutState));
     }
     if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
+      console.log('processing plugins');
       const { RootWrapper, RootProvider, reducers, middlewares } = processPlugins(nextProps);
       this.store.dispatch(setExtra({
         plugins: nextProps.plugins.map(plugin => plugin(nextProps)),
         RootProvider,
         RootWrapper
       }));
-      injectReducers(this.store, reducers);
+      this.store.injectReducers(reducers);
       this.store.injectMiddlewares(middlewares);
     }
     watched.forEach(key => {

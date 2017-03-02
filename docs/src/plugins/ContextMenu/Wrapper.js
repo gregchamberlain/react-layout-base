@@ -56,7 +56,7 @@ const Wrapper = WrappedComponent => {
 
   hoistNonReactStatic(ContextMenuWrapper, WrappedComponent);
   const mapDispatchToProps = dispatch => ({
-    setContextMenu: (val) => dispatch({ type: 'SET_LAYOUT_EXTRA', key: 'contextMenu', value: val })
+    setContextMenu: (val) => dispatch({ type: 'SET_LAYOUT_EXTRA', pairs: { contextMenu: val } })
   });
   return connect(null, mapDispatchToProps)(ContextMenuWrapper);
 
