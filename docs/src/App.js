@@ -83,7 +83,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={ this.state.checked ? [Edit, DnD, ContextMenu, Hover] : [] }
+          plugins={ this.state.checked ? [Edit, DnD, ContextMenu, Hover] : ['taco'] }
         />
       </div>
     );

@@ -48,9 +48,9 @@ class LayoutProvider extends PureComponent {
     }
     if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
       console.log('processing plugins');
-      const { RootWrapper, RootProvider, reducers, middlewares } = processPlugins(nextProps);
+      const { RootWrapper, RootProvider, reducers, middlewares, plugins } = processPlugins(nextProps);
       this.store.dispatch(setExtra({
-        plugins: nextProps.plugins.map(plugin => plugin(nextProps)),
+        plugins,
         RootProvider,
         RootWrapper
       }));

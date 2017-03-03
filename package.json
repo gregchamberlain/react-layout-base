@@ -1,5 +1,5 @@
 {
-  "name": "react-pluggable-layout",
+  "name": "react-layout-base",
   "version": "0.1.0",
   "description": "A pluggable layout system for React",
   "keywords": [
@@ -19,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gregchamberlain/react-pluggable-layout.git"
+    "url": "git+https://github.com/gregchamberlain/react-layout-base.git"
   },
   "author": "Greg Chamberlain <gregchamberlain94@gmail.com> (https://gregchamberlain.github.io)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gregchamberlain/react-pluggable-layout/issues"
+    "url": "https://github.com/gregchamberlain/react-layout-base/issues"
   },
-  "homepage": "https://github.com/gregchamberlain/react-pluggable-layout#readme",
+  "homepage": "https://github.com/gregchamberlain/react-layout-base#readme",
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-core": "^6.5.2",

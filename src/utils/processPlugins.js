@@ -20,9 +20,15 @@ const processPlugins = (props: Props): Object => {
   let RootProvider = ({ children }) => React.Children.only(children);
   let reducers = {};
   let middlewares = [];
+  let plugins = [];
   let names = new Set();
   props.plugins.forEach((pluginFactory, idx) => {
+    if (typeof pluginFactory !== 'function') {
+      console.error(`Error at plugins[${idx}]: Expected plugin to be a function, instead got a ${typeof pluginFactory}`)
+      return;
+    }
     const plugin = pluginFactory(props);
+    plugins.push(plugin)
     if (names.has(plugin.Name)) {
       console.error(`Plugin name conflict. More than one plugin with the name "${plugin.Name}". Ensure you are not using multiple copies of one plugin.`);
     } else {
@@ -37,7 +43,8 @@ const processPlugins = (props: Props): Object => {
     RootWrapper,
     RootProvider,
     reducers,
-    middlewares
+    middlewares,
+    plugins
   };
 };
 
