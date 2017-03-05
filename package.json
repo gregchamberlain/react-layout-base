@@ -14,7 +14,7 @@
     "test": "node --harmony_proxies node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:watch": "jest --coverage --watch",
     "build": "NODE_ENV=production ./scripts/build.sh",
-    "umd": "NODE_ENV=production webpack --config ./webpack.congig.prod.js --progress",
+    "umd": "NODE_ENV=production webpack --config ./webpack.config.prod.js --progress",
     "buildSite": "./scripts/buildSite.sh",
     "prepublish": "npm run build && npm run umd"
   },
