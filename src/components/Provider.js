@@ -9,6 +9,7 @@ import { setLayoutState, setExtra } from '../actions';
 import InnerWrapper from './InnerWrapper';
 import shallowCompare from '../utils/shallowCompare';
 import processPlugins from '../utils/processPlugins';
+import ensureDependencies from '../utils/ensureDependencies';
 
 type Props = {
   layoutState: LayoutState,
@@ -27,6 +28,7 @@ class LayoutProvider extends PureComponent {
 
   constructor(props: Props) {
     super(props);
+    ensureDependencies(props.layoutState, props.components);
     const { RootProvider, RootWrapper, reducers, middlewares } = processPlugins(props);
     this.store = configureStore(reducers, {
       layoutState: props.layoutState,
@@ -42,7 +44,7 @@ class LayoutProvider extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const watched = ['components', 'readOnly'];
+    const watched = ['readOnly'];
     if (nextProps.layoutState !== this.props.layoutState) {
       this.store.dispatch(setLayoutState(nextProps.layoutState));
     }
@@ -56,6 +58,9 @@ class LayoutProvider extends PureComponent {
       }));
       this.store.injectReducers(reducers);
       this.store.injectMiddlewares(middlewares);
+    }
+    if (!shallowCompare(nextProps.components, this.props.components)) {
+      ensureDependencies(nextProps.layoutState, nextProps.components);
     }
     watched.forEach(key => {
       if (!shallowCompare(nextProps[key], this.props[key])) this.store.dispatch(setExtra({ [key]: nextProps[key] }));

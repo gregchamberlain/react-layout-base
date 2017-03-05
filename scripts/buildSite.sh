@@ -1,4 +1,4 @@
-rm -rf site/dist/
+rm -rf docs/dist/
 webpack --config webpack.config.site.js --progress
 # files=( site/dist/* )
 # echo "${files[@]}"

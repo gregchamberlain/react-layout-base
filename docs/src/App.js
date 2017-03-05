@@ -5,13 +5,22 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { Layout, LayoutState } from '../../src';
 import Text from './components/Text';
 import Column from './components/Column';
+import axios from 'axios';
 
 import { DnD, Style, ContextMenu, Hover } from './plugins';
 import Edit from '../../src/plugins/Edit';
 
-const item1 = text => ({ type: 'div', props: { style: { minHeight: 20, margin: 5, background: '#b535e5' } }, style: {}, children: [] });
+const getColor = () => {
+  const r = Math.floor(Math.random() * 255);
+  const g = Math.floor(Math.random() * 255);
+  const b = Math.floor(Math.random() * 255);
+  return `rgb(${r}, ${g}, ${b})`;
+};
 
-let defaultState: LayoutState = new LayoutState('Column');
+const item1 = text => ({ type: 'div', props: { style: { minHeight: 40, margin: 5, padding: 5, background: getColor() } }, style: {}, children: [] });
+const col = () => ({ type: 'div', props: { backgroundColor: getColor() }, children: [] });
+
+let defaultState: LayoutState = new LayoutState('div');
 defaultState = defaultState.insertOrMoveItem('root', 0, item1('Item 1!'));
 defaultState = defaultState.insertOrMoveItem('root', 1, item1('Item 2!'));
 console.log(defaultState.toRaw());
@@ -26,7 +35,8 @@ class App extends PureComponent {
   state: {
     layoutState: LayoutState,
     value: string,
-    checked: boolean
+    checked: boolean,
+    urls: Array<string>
   }
 
   constructor() {
@@ -34,7 +44,8 @@ class App extends PureComponent {
     this.state = {
       layoutState: defaultState,
       value: '',
-      checked: true
+      checked: true,
+      urls: []
     };
   }
 
@@ -48,7 +59,7 @@ class App extends PureComponent {
 
   addItem = (e: any) => {
     e.preventDefault();
-    let layoutState = this.state.layoutState.insertOrMoveItem('root', 0, item1(this.state.value));
+    let layoutState = this.state.layoutState.insertOrMoveItem('root', 0, item1());
     this.setState({ layoutState, value: '' });
   }
 
@@ -57,14 +68,19 @@ class App extends PureComponent {
   }
 
   printMarkup = () => {
-    const markup = renderToStaticMarkup(
-      <Layout
-        layoutState={this.state.layoutState}
-        onChange={() => {}}
-        components={components}
-      />
-    );
-    console.log(markup);
+    // const markup = renderToStaticMarkup(
+    //   <Layout
+    //     layoutState={this.state.layoutState}
+    //     onChange={() => {}}
+    //     components={components}
+    //   />
+    // );
+    // console.log(markup);
+    axios.post('https://8j5okqi8r3.execute-api.us-west-2.amazonaws.com/dev/testRender', {
+      items: this.state.layoutState.toRaw()
+    }).then(resp => {
+      this.setState({ urls: this.state.urls.concat(resp.data.link) });
+    });
   }
 
   render() {
@@ -79,6 +95,9 @@ class App extends PureComponent {
           <input type="checkbox" onChange={this.applyAddon} checked={this.state.checked} />
           Plugins
         </label>
+        { this.state.urls.map(url => (
+          <a key={url} href={url} target="_blank">{url}</a>
+          ))}
         <Layout
           layoutState={this.state.layoutState}
           onChange={this.onChange}

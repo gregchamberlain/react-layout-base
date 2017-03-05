@@ -119,6 +119,14 @@ class LayoutState extends Record({ items: Map(), selectedItem: null }) {
     return key;
   }
 
+  getDependencies(): Set<string> {
+    const dependencies = new Set();
+    this.items.forEach(item => {
+      dependencies.add(item.type);
+    });
+    return dependencies;
+  }
+
 }
 
 export default LayoutState;
