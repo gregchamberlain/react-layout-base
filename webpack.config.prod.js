@@ -1,36 +1,57 @@
-var path = require('path');
 var webpack = require('webpack');
+var env = process.env.NODE_ENV;
 
-module.exports = {
-  entry: './site/src/index.js',
+var reactExternal = {
+  root: 'React',
+  commonjs2: 'react',
+  commonjs: 'react',
+  amd: 'react'
+};
 
-  output: {
-    path: path.join(__dirname, 'site', 'dist'),
-    filename: 'bundle.js',
+var config = {
+  entry: './src/index',
+  externals: {
+    'react': reactExternal,
   },
-
-  devtool: 'cheap-module-source-map',
-
+  module: {
+    loaders: [
+      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ }
+    ]
+  },
+  output: {
+    filename: 'dist/ReactLayoutCore.min.js',
+    library: 'ReactLayoutCore',
+    libraryTarget: 'umd',
+  },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env':{
-        'NODE_ENV': JSON.stringify('production')
+    {
+      apply: function apply(compiler) {
+        compiler.plugin("parser", function(parser, options) {
+          parser.plugin('expression global', function expressionGlobalPlugin() {
+            this.state.module.addVariable('global', "(function() { return this; }()) || Function('return this')()")
+            return false;
+          });
+        });
       }
-    }),
+    },
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    })
+  ]
+}
+
+if (env === 'production') {
+  config.plugins.push(
     new webpack.optimize.UglifyJsPlugin({
-      compress:{
+      compressor: {
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true,
+        screw_ie8: true,
         warnings: false
       }
     })
-  ],
+  )
+}
 
-  module: {
-    rules: [{
-      test: /\.js?$/,
-      loaders: ['babel-loader'],
-      exclude: /node_modules/
-    }]
-  }
-  
-};
+module.exports = config;

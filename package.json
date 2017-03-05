@@ -1,6 +1,6 @@
 {
-  "name": "react-layout-base",
-  "version": "0.1.2",
+  "name": "react-layout-core",
+  "version": "0.1.0",
   "description": "A pluggable layout system for React",
   "keywords": [
     "react",
@@ -14,19 +14,20 @@
     "test": "node --harmony_proxies node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:watch": "jest --coverage --watch",
     "build": "NODE_ENV=production ./scripts/build.sh",
+    "umd": "NODE_ENV=production webpack --config ./webpack.congig.prod.js --progress",
     "buildSite": "./scripts/buildSite.sh",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build && npm run umd"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gregchamberlain/react-layout-base.git"
+    "url": "git+https://github.com/gregchamberlain/react-layout-core.git"
   },
   "author": "Greg Chamberlain <gregchamberlain94@gmail.com> (http://gregchamberlain.tech)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gregchamberlain/react-layout-base/issues"
+    "url": "https://github.com/gregchamberlain/react-layout-core/issues"
   },
-  "homepage": "https://github.com/gregchamberlain/react-layout-base#readme",
+  "homepage": "https://github.com/gregchamberlain/react-layout-core#readme",
   "devDependencies": {
     "axios": "^0.15.3",
     "babel-cli": "^6.14.0",
