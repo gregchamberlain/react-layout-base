@@ -7,7 +7,8 @@ import Text from './components/Text';
 import Column from './components/Column';
 import axios from 'axios';
 
-import { DnD, Style, ContextMenu, Hover } from './plugins';
+import { Style, ContextMenu, Hover } from './plugins';
+import DnD from 'react-layout-plugin-dnd/lib';
 import Edit from '../../src/plugins/Edit';
 
 const getColor = () => {

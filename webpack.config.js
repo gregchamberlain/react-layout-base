@@ -16,7 +16,8 @@ module.exports = {
     publicPath: '/docs/dist/'
   },
 
-  devtool: 'cheap-module-inline-source-map',
+  // devtool: 'cheap-module-inline-source-map',
+  devtool: 'eval',
 
   module: {
     rules: [{

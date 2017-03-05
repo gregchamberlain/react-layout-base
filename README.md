@@ -1,3 +1,3 @@
-# React Pluggable Layout [![CircleCI branch](https://img.shields.io/circleci/project/github/gregchamberlain/react-pluggable-layout.svg?style=flat-square)](https://circleci.com/gh/gregchamberlain/react-pluggable-layout) [![Coveralls](https://img.shields.io/coveralls/gregchamberlain/react-pluggable-layout.svg?style=flat-square)](https://coveralls.io/github/gregchamberlain/react-pluggable-layout)
+# React Pluggable Layout [![CircleCI branch](https://img.shields.io/circleci/project/github/gregchamberlain/react-layout-core.svg?style=flat-square)](https://circleci.com/gh/gregchamberlain/react-layout-core) [![Coveralls](https://img.shields.io/coveralls/gregchamberlain/react-layout-core.svg?style=flat-square)](https://coveralls.io/github/gregchamberlain/react-layout-core)
 
 A simple component that builds complete React layouts from JSON.

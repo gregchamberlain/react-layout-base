@@ -1598,6 +1598,15 @@ dnd-core@^2.2.3:
     lodash "^4.2.0"
     redux "^3.2.0"
 
+dnd-core@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-2.2.4.tgz#a05d49220fb2b05d08b99a00177c01c9a1c445ad"
+  dependencies:
+    asap "^2.0.3"
+    invariant "^2.0.0"
+    lodash "^4.2.0"
+    redux "^3.2.0"
+
 doctrine@^1.2.2:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-1.5.0.tgz#379dce730f6166f76cefa4e6707a159b02c5a6fa"
@@ -3936,12 +3945,28 @@ react-dnd-html5-backend@^2.2.3:
   dependencies:
     lodash "^4.2.0"
 
+react-dnd-html5-backend@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-2.2.4.tgz#6c4a704efaa35cf568f40376ed82b8a3eb3c26df"
+  dependencies:
+    lodash "^4.2.0"
+
 react-dnd@^2.2.3:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-2.2.3.tgz#75f6a66081fb32a41afa500755b4252fe5dd7a42"
   dependencies:
     disposables "^1.0.1"
     dnd-core "^2.2.3"
+    hoist-non-react-statics "^1.2.0"
+    invariant "^2.1.0"
+    lodash "^4.2.0"
+
+react-dnd@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-2.2.4.tgz#8982d557cc620b1f201a8b6ebda894b622af903f"
+  dependencies:
+    disposables "^1.0.1"
+    dnd-core "^2.2.4"
     hoist-non-react-statics "^1.2.0"
     invariant "^2.1.0"
     lodash "^4.2.0"
@@ -3964,6 +3989,13 @@ react-hot-loader@^3.0.0-beta.6:
     react-proxy "^3.0.0-alpha.0"
     redbox-react "^1.2.5"
     source-map "^0.4.4"
+
+react-layout-plugin-dnd@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-layout-plugin-dnd/-/react-layout-plugin-dnd-0.1.2.tgz#6f2a4afcb18ec786f705d9c51c0d362049d0dd09"
+  dependencies:
+    react-dnd "^2.2.4"
+    react-dnd-html5-backend "^2.2.4"
 
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"
