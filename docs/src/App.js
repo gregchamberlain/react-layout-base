@@ -4,12 +4,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 import { Layout, LayoutState } from '../../src';
 import Text from './components/Text';
-import Column from './components/Column';
+// import Column from './components/Column';
 import axios from 'axios';
 
 import { Style, ContextMenu, Hover } from './plugins';
 import DnD from 'react-layout-plugin-dnd/lib';
-import Edit from '../../src/plugins/Edit';
 
 const getColor = () => {
   const r = Math.floor(Math.random() * 255);
@@ -18,16 +17,15 @@ const getColor = () => {
   return `rgb(${r}, ${g}, ${b})`;
 };
 
-const item1 = text => ({ type: 'div', props: { style: { minHeight: 40, margin: 5, padding: 5, background: getColor() } }, style: {}, children: [] });
+const item1 = type => ({ type: type || 'div', props: { style: { minHeight: 40, margin: 5, padding: 5, background: getColor() } }, style: {}, children: [] });
 const col = () => ({ type: 'div', props: { backgroundColor: getColor() }, children: [] });
 
 let defaultState: LayoutState = new LayoutState('div');
-defaultState = defaultState.insertOrMoveItem('root', 0, item1('Item 1!'));
-defaultState = defaultState.insertOrMoveItem('root', 1, item1('Item 2!'));
+defaultState = defaultState.insertOrMoveItem('root', 0, item1());
+defaultState = defaultState.insertOrMoveItem('root', 1, item1());
 console.log(defaultState.toRaw());
 
 const components = {
-  Column,
   Text
 };
 
@@ -103,7 +101,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={ this.state.checked ? [Edit, DnD, ContextMenu, Hover] : ['taco'] }
+          plugins={[DnD]}
         />
       </div>
     );

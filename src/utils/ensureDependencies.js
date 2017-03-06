@@ -11,7 +11,7 @@ const ensureDependencies = (layoutState: LayoutState, components: Object): void 
   const unmet = [];
   dependencies.forEach(dependency => {
     const isCustomComponent = dependency[0] !== dependency[0].toLowerCase();
-    if (isCustomComponent && !components[dependencies]) {
+    if (isCustomComponent && !components[dependency]) {
       unmet.push(dependency)
     }
   });

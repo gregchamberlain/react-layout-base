@@ -1,5 +1,5 @@
 // @flow
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { Provider } from 'react-redux';
 
 import configureStore, { injectReducers, createMiddleware } from '../redux';
@@ -11,6 +11,8 @@ import shallowCompare from '../utils/shallowCompare';
 import processPlugins from '../utils/processPlugins';
 import ensureDependencies from '../utils/ensureDependencies';
 
+const Component = React.PureComponent || React.Component;
+
 type Props = {
   layoutState: LayoutState,
   onChange: () => void,
@@ -20,7 +22,7 @@ type Props = {
   children: Array<Object>
 }
 
-class LayoutProvider extends PureComponent {
+class LayoutProvider extends Component {
 
   static defaultProps: Object
   props: Props
@@ -79,8 +81,7 @@ class LayoutProvider extends PureComponent {
 
 LayoutProvider.propTypes = {
   layoutState: PropTypes.instanceOf(LayoutState).isRequired,
-  onChange: PropTypes.func.isRequired,
-  components: PropTypes.object.isRequired,
+  components: PropTypes.object,
   plugins: PropTypes.array,
 };
 

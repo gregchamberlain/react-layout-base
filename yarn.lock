@@ -3997,6 +3997,10 @@ react-layout-plugin-dnd@^0.1.2:
     react-dnd "^2.2.4"
     react-dnd-html5-backend "^2.2.4"
 
+react-layout-plugin-edit@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-layout-plugin-edit/-/react-layout-plugin-edit-0.1.0.tgz#5c6c6eaadfc8875b19ce78957de1f3febedcdcbe"
+
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-3.0.0-alpha.1.tgz#4400426bcfa80caa6724c7755695315209fa4b07"
