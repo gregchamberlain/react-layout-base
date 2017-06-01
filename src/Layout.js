@@ -1,30 +1,27 @@
 // @flow
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import Provider from './components/Provider';
+import LayoutProvider from './components/LayoutProvider';
 import RootLayout from './components/RootLayout';
 import LayoutState from './model/LayoutState';
 
 type Props = {
   layoutState: LayoutState,
-  onChange: () => void,
   components: Object,
   plugins: ?Array<Object>,
-  style: ?Object
 };
 
 const Layout = ({ style, ...props}: Props) => (
-  <Provider {...props}>
+  <LayoutProvider {...props}>
     <RootLayout style={style} />
-  </Provider>
+  </LayoutProvider>
 );
 
 Layout.propTypes = {
   layoutState: PropTypes.instanceOf(LayoutState).isRequired,
-  onChange: PropTypes.func,
-  components: PropTypes.object.isRequired,
+  components: PropTypes.object,
   plugins: PropTypes.array,
-  style: PropTypes.object
 };
 
 export default Layout;

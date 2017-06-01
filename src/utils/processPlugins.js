@@ -1,5 +1,4 @@
 // @flow
-import InnerWrapper from '../components/InnerWrapper';
 import React from 'react';
 
 type Props = {
@@ -16,8 +15,8 @@ type Plugin = {
 }
 
 const processPlugins = (props: Props): Object => {
-  let RootWrapper = InnerWrapper;
   let RootProvider = ({ children }) => React.Children.only(children);
+  let wrappers = [];
   let reducers = {};
   let middlewares = [];
   let plugins = [];
@@ -34,14 +33,14 @@ const processPlugins = (props: Props): Object => {
     } else {
       names.add(plugin.Name);
     }
-    if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
+    if (plugin.Wrapper) wrappers.push(plugin.Wrapper);
     if (plugin.Provider) RootProvider = plugin.Provider(RootProvider);
     if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
     if (plugin.middleware) middlewares.push(plugin.middleware);
   });
   return {
-    RootWrapper,
     RootProvider,
+    wrappers,
     reducers,
     middlewares,
     plugins

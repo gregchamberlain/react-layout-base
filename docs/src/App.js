@@ -7,8 +7,8 @@ import Text from './components/Text';
 // import Column from './components/Column';
 import axios from 'axios';
 
-import { Style, ContextMenu, Hover } from './plugins';
-import DnD from 'react-layout-plugin-dnd/lib';
+import { Refs, DnD } from './plugins';
+// import DnD from 'react-layout-plugin-dnd/lib';
 
 const getColor = () => {
   const r = Math.floor(Math.random() * 255);
@@ -44,7 +44,8 @@ class App extends PureComponent {
       layoutState: defaultState,
       value: '',
       checked: true,
-      urls: []
+      urls: [],
+      addons: [Refs, DnD]
     };
   }
 
@@ -63,7 +64,10 @@ class App extends PureComponent {
   }
 
   applyAddon = (e: any) => {
-    this.setState({ checked: e.target.checked });
+    this.setState({
+      checked: e.target.checked,
+      addons: e.target.checked ? [Refs, DnD] : []
+    });
   }
 
   printMarkup = () => {
@@ -101,7 +105,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={[DnD]}
+          plugins={this.state.addons}
         />
       </div>
     );

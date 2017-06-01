@@ -1,10 +1,10 @@
 // @flow
 import React, { PropTypes } from 'react';
 
-import OuterWrapper from './OuterWrapper';
+import Wrapper from './Wrapper';
 
 const RootLayout: Function = (): React$Element<*> => (
-  <OuterWrapper id="root" />
+  <Wrapper id="root" />
 );
 
 export default RootLayout;

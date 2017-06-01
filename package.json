@@ -11,7 +11,7 @@
     "start": "webpack-dev-server --open",
     "lint": "eslint src",
     "flow": "flow; test $? -eq 0 -o $? -eq 2",
-    "test": "node --harmony_proxies node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test": "node node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:watch": "jest --coverage --watch",
     "build": "NODE_ENV=production ./scripts/build.sh",
     "umd": "NODE_ENV=production webpack --config ./webpack.config.prod.js --progress",
@@ -71,6 +71,7 @@
     "hoist-non-react-statics": "^1.2.0",
     "immutability-helper": "^2.1.2",
     "immutable": "^3.8.1",
+    "prop-types": "^15.5.10",
     "react-redux": "^5.0.3",
     "redux": "^3.6.0"
   }
