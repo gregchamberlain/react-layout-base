@@ -1,47 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-const getWrappedComponent = (item, components, wrapper) => {
-  const Comp = components[item.type] || item.type;
-  return wrapper(Comp);
-}
+const WrapperManager = ({ item, WrappedComponent, ...props }) => (
+  <WrappedComponent id={item.id} {...item.props}>
+    {item.children.map(cId => <Wrapper key={cId} id={cId} />)}
+  </WrappedComponent>
+);
 
-class WrapperManager extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      WrappedComponent: getWrappedComponent(
-        props.item_, props.components_, props.RootWrapper_)
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.RootWrapper_ !== this.props.RootWrapper_) {
-      this.setState({
-        WrappedComponent: getWrappedComponent(
-          props.item_, props.components_, props.RootWrapper_)
-      });
-    }
-  }
-
-  render() {
-    const { item_, components_, RootWrapper_, dispatch, pseudoRef, ...props } = this.props;
-    const { WrappedComponent } = this.state;
-    return (
-      <WrappedComponent id={item_.id} {...item_.props} pseudoRef={() => {}}>
-        {item_.children.map(cId => <Wrapper key={cId} id={cId} />)}
-      </WrappedComponent>
-    );
-  }
-
-}
-
-const mapStateToProps = ({ layoutState, layoutExtras }, { id }) => ({
-  item_: layoutState.getItem(id),
-  components_: layoutExtras.components,
-  RootWrapper_: layoutExtras.RootWrapper,
-});
+const mapStateToProps = ({ layoutState, layoutExtras }, { id }) => {
+  const item = layoutState.getItem(id);
+  const WrappedComponent = layoutExtras.wrapperCache.getWrapped(item.type);
+  return {
+    item,
+    WrappedComponent
+  };
+};
 
 const Wrapper = connect(mapStateToProps)(WrapperManager)
 

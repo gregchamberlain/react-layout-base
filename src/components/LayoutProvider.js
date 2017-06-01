@@ -10,6 +10,7 @@ import InnerWrapper from './InnerWrapper';
 import shallowCompare from '../utils/shallowCompare';
 import processPlugins from '../utils/processPlugins';
 import ensureDependencies from '../utils/ensureDependencies';
+import WrapperCache from '../utils/WrapperCache';
 
 const Component = React.PureComponent || React.Component;
 
@@ -31,13 +32,14 @@ class LayoutProvider extends Component {
   constructor(props: Props) {
     super(props);
     ensureDependencies(props.layoutState, props.components);
-    const { RootProvider, RootWrapper, reducers, middlewares } = processPlugins(props);
+    const { RootProvider, RootWrapper, wrappers, reducers, middlewares } = processPlugins(props);
     this.store = configureStore(reducers, {
       layoutState: props.layoutState,
       nextLayoutState: props.layoutState,
       layoutExtras: {
         plugins: props.plugins.map(plugin => plugin(props)),
         components: props.components,
+        wrapperCache: new WrapperCache(props.components, wrappers),
         readOnly: props.readOnly,
         RootProvider,
         RootWrapper
@@ -52,9 +54,10 @@ class LayoutProvider extends Component {
     }
     if (!shallowCompare(nextProps.plugins, this.props.plugins)) {
       console.log('processing plugins');
-      const { RootWrapper, RootProvider, reducers, middlewares, plugins } = processPlugins(nextProps);
+      const { RootWrapper, RootProvider, wrappers, reducers, middlewares, plugins } = processPlugins(nextProps);
       this.store.dispatch(setExtra({
         plugins,
+        wrapperCache: new WrapperCache(nextProps.components, wrappers),
         RootProvider,
         RootWrapper
       }));
@@ -63,6 +66,10 @@ class LayoutProvider extends Component {
     }
     if (!shallowCompare(nextProps.components, this.props.components)) {
       ensureDependencies(nextProps.layoutState, nextProps.components);
+      const { wrappers } = processPlugins(nextProps);
+      this.store.dispatch(setExtra({
+        wrapperCache: new WrapperCache(nextProps.components, wrappers)
+      }));
     }
     watched.forEach(key => {
       if (!shallowCompare(nextProps[key], this.props[key])) this.store.dispatch(setExtra({ [key]: nextProps[key] }));

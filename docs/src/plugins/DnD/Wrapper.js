@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 
 const source = {
   beginDrag(props) {
-    console.log(props);
     return props.layoutState.getItem(props.id);
   }
 };
@@ -41,7 +40,7 @@ const DnDWrapper = (WrappedComponent, displayName) => {
           const node = findDOMNode(instance);
           if (props.id !== 'root') connectDragSource(node);
           this.node = instance;
-          pseudoRef(instance);
+          typeof pseudoRef === 'function' && pseudoRef(instance);
         }} />
       );
     }

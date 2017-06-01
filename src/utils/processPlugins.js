@@ -42,6 +42,7 @@ const processPlugins = (props: Props): Object => {
   return {
     RootWrapper: composeWrappers(wrappers),
     RootProvider,
+    wrappers,
     reducers,
     middlewares,
     plugins
