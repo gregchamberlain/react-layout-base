@@ -14,7 +14,7 @@ ClassWrapper.propTypes = {
   children: PropTypes.element
 };
 
-// Calls plugin wrappers pseudoRef function to give then access to the component
+// Calls plugin wrappers pseudoRef function to give access to the component
 const InnerWrapper = ({ pseudoRef, ...props }) => <ClassWrapper {...props} ref={instance => pseudoRef(instance)} />
 
 export default InnerWrapper;

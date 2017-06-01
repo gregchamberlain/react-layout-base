@@ -1,4 +1,4 @@
-import { Layout, LayoutState, RootLayout, Provider } from '../src';
+import { Layout, LayoutState, RootLayout, LayoutProvider } from '../src';
 
 describe('Package exports', () => {
   it('exports Layout', () => {
@@ -7,10 +7,10 @@ describe('Package exports', () => {
   it('exports LayoutState', () => {
     expect(LayoutState).not.toBeUndefined();
   });
-  it('exports Layout', () => {
+  it('exports RootLayout', () => {
     expect(RootLayout).not.toBeUndefined();
   });
-  it('exports Layout', () => {
-    expect(Provider).not.toBeUndefined();
+  it('exports LayoutProivder', () => {
+    expect(LayoutProvider).not.toBeUndefined();
   });
 });

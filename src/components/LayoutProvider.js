@@ -87,7 +87,7 @@ LayoutProvider.propTypes = {
 
 LayoutProvider.defaultProps = {
   plugins: [],
-  onChange: () => {}
+  components: {}
 };
 
 export default LayoutProvider;

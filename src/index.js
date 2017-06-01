@@ -1,4 +1,4 @@
 export LayoutState from './model/LayoutState';
-export Provider from './components/Provider';
+export LayoutProvider from './components/LayoutProvider';
 export RootLayout from './components/RootLayout';
 export Layout from './Layout';

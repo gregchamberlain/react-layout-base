@@ -16,8 +16,8 @@ type Plugin = {
 }
 
 const processPlugins = (props: Props): Object => {
-  let RootWrapper = InnerWrapper;
   let RootProvider = ({ children }) => React.Children.only(children);
+  let wrappers = [];
   let reducers = {};
   let middlewares = [];
   let plugins = [];
@@ -34,18 +34,26 @@ const processPlugins = (props: Props): Object => {
     } else {
       names.add(plugin.Name);
     }
-    if (plugin.Wrapper) RootWrapper = plugin.Wrapper(RootWrapper);
+    if (plugin.Wrapper) wrappers.push(plugin.Wrapper);
     if (plugin.Provider) RootProvider = plugin.Provider(RootProvider);
     if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
     if (plugin.middleware) middlewares.push(plugin.middleware);
   });
   return {
-    RootWrapper,
+    RootWrapper: composeWrappers(wrappers),
     RootProvider,
     reducers,
     middlewares,
     plugins
   };
 };
+
+const composeWrappers = wrappers => Comp => {
+  let RootWrapper = Comp;
+  wrappers.forEach(wrapper => {
+    RootWrapper = wrapper(RootWrapper)
+  });
+  return RootWrapper;
+}
 
 export default processPlugins;
