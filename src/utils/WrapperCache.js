@@ -15,7 +15,7 @@ class WrapperCache {
   createWrapper(type) {
     let RootWrapper = this.components_[type] || type;
     this.wrappers_.forEach(wrapper => {
-      RootWrapper = wrapper(RootWrapper);
+      RootWrapper = wrapper(RootWrapper, type);
     })
     this.cache_[type] = RootWrapper;
   }
