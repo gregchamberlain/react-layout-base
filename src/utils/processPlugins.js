@@ -1,5 +1,4 @@
 // @flow
-import InnerWrapper from '../components/InnerWrapper';
 import React from 'react';
 
 type Props = {
@@ -40,7 +39,6 @@ const processPlugins = (props: Props): Object => {
     if (plugin.middleware) middlewares.push(plugin.middleware);
   });
   return {
-    RootWrapper: composeWrappers(wrappers),
     RootProvider,
     wrappers,
     reducers,
@@ -48,13 +46,5 @@ const processPlugins = (props: Props): Object => {
     plugins
   };
 };
-
-const composeWrappers = wrappers => Comp => {
-  let RootWrapper = Comp;
-  wrappers.forEach(wrapper => {
-    RootWrapper = wrapper(RootWrapper)
-  });
-  return RootWrapper;
-}
 
 export default processPlugins;
