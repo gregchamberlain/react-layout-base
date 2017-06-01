@@ -29,7 +29,7 @@ class WrapperManager extends Component {
     const { item_, components_, RootWrapper_, dispatch, pseudoRef, ...props } = this.props;
     const { WrappedComponent } = this.state;
     return (
-      <WrappedComponent {...item_.props} {...props} ref={instance => (typeof pseudoRef === 'function') && pseudoRef(instance)}>
+      <WrappedComponent id={item_.id} {...item_.props} pseudoRef={() => {}}>
         {item_.children.map(cId => <Wrapper key={cId} id={cId} />)}
       </WrappedComponent>
     );

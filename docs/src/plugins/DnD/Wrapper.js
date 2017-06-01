@@ -1,23 +1,16 @@
+
 import React, { PureComponent } from 'react';
 import { findDOMNode } from 'react-dom';
-import { DragSource, DropTarget } from 'react-dnd';
+import { DragSource } from 'react-dnd';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-import { insertOrMoveItem } from '../../../../src/plugins/Edit/actions';
 import { connect } from 'react-redux';
 
 const source = {
   beginDrag(props) {
+    console.log(props);
     return props.layoutState.getItem(props.id);
   }
 };
-
-const target = {
-  drop(props, monitor) {
-    if (!monitor.didDrop()) {
-      props.moveItem(props.id, 0, monitor.getItem());
-    }
-  }
-}
 
 const DnDWrapper = (WrappedComponent, displayName) => {
 
@@ -42,12 +35,11 @@ const DnDWrapper = (WrappedComponent, displayName) => {
     }
 
     render() {
-      const { connectDragSource, isDragging, layoutState, pseudoRef, moveItem, connectDropTarget, ...props } = this.props;
+      const { connectDragSource, isDragging, layoutState, pseudoRef, ...props } = this.props;
       return (
         <WrappedComponent {...props} pseudoRef={instance => {
           const node = findDOMNode(instance);
           if (props.id !== 'root') connectDragSource(node);
-          connectDropTarget(node)
           this.node = instance;
           pseudoRef(instance);
         }} />
@@ -60,18 +52,10 @@ const DnDWrapper = (WrappedComponent, displayName) => {
 
   const mapStateToProps = ({ layoutState }) => ({ layoutState });
 
-  const mapDispatchToProps = dispatch => ({
-    moveItem: (...args) => dispatch(insertOrMoveItem(...args))
-  });
-
-  const droppable = DropTarget('Component', target, (conn, monitor) => ({
-    connectDropTarget: conn.dropTarget()
-  }))(DnD)
-
-  return connect(mapStateToProps, mapDispatchToProps)(DragSource('Component', source, (conn, monitor) => ({
+  return connect(mapStateToProps)(DragSource('Component', source, (conn, monitor) => ({
     connectDragSource: conn.dragSource(),
     isDragging: monitor.isDragging()
-  }))(droppable))
+  }))(DnD))
 
 };
 

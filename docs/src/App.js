@@ -7,7 +7,7 @@ import Text from './components/Text';
 // import Column from './components/Column';
 import axios from 'axios';
 
-import { Style, ContextMenu, Hover } from './plugins';
+import { Refs } from './plugins';
 import DnD from 'react-layout-plugin-dnd/lib';
 
 const getColor = () => {
@@ -101,7 +101,7 @@ class App extends PureComponent {
           layoutState={this.state.layoutState}
           onChange={this.onChange}
           components={components}
-          plugins={[DnD]}
+          plugins={[Refs, DnD]}
         />
       </div>
     );
