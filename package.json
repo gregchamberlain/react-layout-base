@@ -58,6 +58,7 @@
     "react-hot-loader": "^3.0.0-beta.6",
     "react-layout-plugin-dnd": "^0.1.2",
     "react-layout-plugin-edit": "^0.1.0",
+    "react-router-dom": "^4.1.1",
     "react-test-renderer": "^15.4.2",
     "webpack": "^2.2.0",
     "webpack-chunk-hash": "^0.4.0",
