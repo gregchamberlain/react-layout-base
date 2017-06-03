@@ -1,0 +1,1 @@
+export default name => name[0].toLowerCase() !== name[0];

@@ -1,3 +1,5 @@
+import isCustomType from './isCustomType';
+
 class WrapperCache {
 
   constructor(components, wrappers) {
@@ -13,7 +15,15 @@ class WrapperCache {
   }
 
   createWrapper(type) {
-    let RootWrapper = this.components_[type] || type;
+    /**
+     * If type is not a default component (e.i. 'div', 'span', etc.) it must be in components.
+     * We check components from default types so they can be overridden if wanted.
+     */
+    let RootWrapper = isCustomType(type) ? this.components_[type] : this.components_[type] || type;
+    if (!RootWrapper) {
+      console.error(`Layout: Component of type "${type}" required, but not supplied.`);
+      return;
+    }
     this.wrappers_.forEach(wrapper => {
       RootWrapper = wrapper(RootWrapper, type);
     })

@@ -4,11 +4,13 @@ import { HashRouter as Router, Route, Link } from 'react-router-dom';
 import Basic from './examples/basic';
 import Fancy from './examples/extra';
 import Provider from './examples/provider';
+import Unmet from './examples/unmet';
 
 const examples = {
   Basic,
   Fancy,
-  Provider
+  Provider,
+  Unmet
 };
 
 const App = () => (

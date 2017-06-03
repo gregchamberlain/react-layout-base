@@ -30,7 +30,6 @@ class LayoutProvider extends Component {
 
   constructor(props: Props) {
     super(props);
-    ensureDependencies(props.layoutState, props.components);
     const { RootProvider, wrappers, reducers, middlewares } = processPlugins(props);
     this.store = configureStore(reducers, {
       layoutState: props.layoutState,
@@ -61,7 +60,6 @@ class LayoutProvider extends Component {
       this.store.injectMiddlewares(middlewares);
     }
     if (!shallowCompare(nextProps.components, this.props.components)) {
-      ensureDependencies(nextProps.layoutState, nextProps.components);
       const { wrappers } = processPlugins(nextProps);
       this.store.dispatch(setExtra({
         wrapperCache: new WrapperCache(nextProps.components, wrappers),

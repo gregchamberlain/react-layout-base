@@ -122,7 +122,10 @@ class LayoutState extends Record({ items: Map(), selectedItem: null }) {
   getDependencies(): Set<string> {
     const dependencies = new Set();
     this.items.forEach(item => {
-      dependencies.add(item.type);
+      // Custom components are always capitalize
+      if (item.type[0].toLowerCase() !== item.type[0]) {
+        dependencies.add(item.type);
+      }
     });
     return dependencies;
   }
