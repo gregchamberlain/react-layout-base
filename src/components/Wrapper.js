@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
 const WrapperManager = ({ item, WrappedComponent, ...props }) => (
-  <WrappedComponent id={item.id} {...item.props}>
+  <WrappedComponent data-id={item.id} {...item.props}>
     {item.children.map(cId => <Wrapper key={cId} id={cId} />)}
   </WrappedComponent>
 );
