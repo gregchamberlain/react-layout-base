@@ -64,7 +64,8 @@ class LayoutProvider extends Component {
       ensureDependencies(nextProps.layoutState, nextProps.components);
       const { wrappers } = processPlugins(nextProps);
       this.store.dispatch(setExtra({
-        wrapperCache: new WrapperCache(nextProps.components, wrappers)
+        wrapperCache: new WrapperCache(nextProps.components, wrappers),
+        components: nextProps.components
       }));
     }
     watched.forEach(key => {
