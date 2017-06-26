@@ -1,6 +1,6 @@
 // @flow
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
+import connectLayout from '../utils/connectLayout';
 
 type Props = {
   RootProvider: Function
@@ -18,4 +18,4 @@ const mapStateToProps = ({ layoutExtras }) => ({
   RootProvider: layoutExtras.RootProvider
 });
 
-export default connect(mapStateToProps)(PluginProvider);
+export default connectLayout(mapStateToProps)(PluginProvider);

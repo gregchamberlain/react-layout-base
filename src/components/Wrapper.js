@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
+import connectLayout from '../utils/connectLayout';
 
 const WrapperManager = ({ item, WrappedComponent, ...props }) => WrappedComponent ? (
   <WrappedComponent data-id={item.id} {...item.props}>
@@ -25,7 +25,7 @@ const mapStateToProps = ({ layoutState, layoutExtras }, { id }) => {
   };
 };
 
-const Wrapper = connect(mapStateToProps)(WrapperManager)
+const Wrapper = connectLayout(mapStateToProps)(WrapperManager)
 
 Wrapper.propTypes = {
   id: PropTypes.string.isRequired

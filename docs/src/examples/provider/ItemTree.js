@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connectLayout } from '../../../../src';
 
 const ItemTree = ({ item }) => (
   <ConnectedItemTreeNode id="root" />
@@ -68,6 +68,6 @@ const mapStateToProps = ({ layoutState }, { id }) => ({
   item: layoutState.getItem(id)
 });
 
-const ConnectedItemTreeNode = connect(mapStateToProps)(ItemTreeNode);
+const ConnectedItemTreeNode = connectLayout(mapStateToProps)(ItemTreeNode);
 
 export default ItemTree;

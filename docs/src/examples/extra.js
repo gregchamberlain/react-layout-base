@@ -23,7 +23,6 @@ const col = () => ({ type: 'div', props: { backgroundColor: getColor() }, childr
 let defaultState: LayoutState = new LayoutState('div');
 defaultState = defaultState.insertOrMoveItem('root', 0, item1());
 defaultState = defaultState.insertOrMoveItem('root', 1, item1());
-console.log(defaultState.toRaw());
 
 const components = {
   Text

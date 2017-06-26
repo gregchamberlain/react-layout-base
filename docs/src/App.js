@@ -8,7 +8,6 @@ import Unmet from './examples/unmet';
 
 const examples = {
   Basic,
-  Fancy,
   Provider,
   Unmet
 };

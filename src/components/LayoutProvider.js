@@ -1,6 +1,8 @@
 // @flow
 import React, { PropTypes } from 'react';
-import { Provider } from 'react-redux';
+import { createProvider } from 'react-redux';
+
+const Provider = createProvider('layoutStore');
 
 import configureStore, { injectReducers, createMiddleware } from '../redux';
 import LayoutState from '../model/LayoutState';
