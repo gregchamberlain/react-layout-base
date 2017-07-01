@@ -16,9 +16,11 @@ const App = () => (
   <Router>
     <div>
       <Route exact path="/" render={() => <h1>React Layout Core Examples!</h1>} />
-      {Object.keys(examples).map(name => (
-        <Link to={`/${name}`} key={name}>{name}</Link>
-      ))}
+      <ul>
+        {Object.keys(examples).map(name => (
+          <li key={name}><Link to={`/${name}`}>{name}</Link></li>
+        ))}
+      </ul>
       {Object.keys(examples).map(name => (
         <Route
           key={`route-${name}`}

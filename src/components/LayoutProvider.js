@@ -1,5 +1,6 @@
 // @flow
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { createProvider } from 'react-redux';
 
 const Provider = createProvider('layoutStore');
@@ -10,7 +11,6 @@ import PluginProvider from './PluginProvider';
 import { setLayoutState, setExtra } from '../actions';
 import shallowCompare from '../utils/shallowCompare';
 import processPlugins from '../utils/processPlugins';
-import ensureDependencies from '../utils/ensureDependencies';
 import WrapperCache from '../utils/WrapperCache';
 
 const Component = React.PureComponent || React.Component;
