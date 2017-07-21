@@ -60,7 +60,7 @@
     "react-layout-plugin-edit": "^0.1.0",
     "react-router-dom": "^4.1.1",
     "react-test-renderer": "^15.4.2",
-    "webpack": "^2.2.0",
+    "webpack": "^3.3.0",
     "webpack-chunk-hash": "^0.4.0",
     "webpack-dev-server": "^2.2.0"
   },
