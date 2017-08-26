@@ -17,7 +17,7 @@ class WrapperCache {
   createWrapper(type) {
     /**
      * If type is not a default component (e.i. 'div', 'span', etc.) it must be in components.
-     * We check components from default types so they can be overridden if wanted.
+     * We check components for default types so they can be overridden if wanted.
      */
     let RootWrapper = isCustomType(type) ? this.components_[type] : this.components_[type] || type;
     if (!RootWrapper) {
