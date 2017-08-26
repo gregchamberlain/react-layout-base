@@ -16,9 +16,9 @@ WrapperManager.propTypes = {
   ])
 }
 
-const mapStateToProps = ({ layoutState, layoutExtras }, { id }) => {
+const mapStateToProps = ({ layoutState, wrapperCache }, { id }) => {
   const item = layoutState.getItem(id);
-  const WrappedComponent = layoutExtras.wrapperCache.getWrapped(item.type);
+  const WrappedComponent = wrapperCache.getWrapped(item.type);
   return {
     item,
     WrappedComponent

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import shallowCompare from './shallowCompare';
 
 type Props = {
   plugins: Array<Function>
@@ -17,8 +18,6 @@ type Plugin = {
 const processPlugins = (props: Props): Object => {
   let RootProvider = ({ children }) => React.Children.only(children);
   let wrappers = [];
-  let reducers = {};
-  let middlewares = [];
   let plugins = [];
   let names = new Set();
   props.plugins.forEach((pluginFactory, idx) => {
@@ -35,14 +34,10 @@ const processPlugins = (props: Props): Object => {
     }
     if (plugin.Wrapper) wrappers.push(plugin.Wrapper);
     if (plugin.Provider) RootProvider = plugin.Provider(RootProvider);
-    if (plugin.reducer) reducers[plugin.Name] = plugin.reducer;
-    if (plugin.middleware) middlewares.push(plugin.middleware);
   });
   return {
     RootProvider,
     wrappers,
-    reducers,
-    middlewares,
     plugins
   };
 };

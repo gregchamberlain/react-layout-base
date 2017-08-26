@@ -15,8 +15,8 @@ PluginProvider.propTypes = {
   RootProvider: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ layoutExtras }) => ({
-  RootProvider: layoutExtras.RootProvider
+const mapStateToProps = ({ RootProvider }) => ({
+  RootProvider
 });
 
 export default connectLayout(mapStateToProps)(PluginProvider);
