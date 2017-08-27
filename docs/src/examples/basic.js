@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { Layout, LayoutState } from '../../../src';
 
-import { createItem } from '../utils';
+import { createItem, getStyle } from '../utils';
 
 const items = {
-  root: createItem()
-}
+  root: { key: 'root', type: 'div', props: { style: getStyle() }, children: [{ key: 'a' }, { key: 'b' }] },
+  a: { key: 'a', type: 'div', props: { style: getStyle() }, children: [] },
+  b: { key: 'b', type: 'div', props: { style: getStyle() }, children: [{ key: 'c' }] },
+  c: { key: 'c', type: 'div', props: { style: getStyle() }, children: [] },
+};
 
-let layoutState = new LayoutState({ items });
-// layoutState = layoutState.insertOrMoveItem('root', 0, createItem());
-// layoutState = layoutState.insertOrMoveItem('root', 0, createItem());
-// const last = layoutState.items.last().id;
-// layoutState = layoutState.insertOrMoveItem(last, 0, createItem());
-// layoutState = layoutState.insertOrMoveItem(last, 0, createItem());
+let layoutState = new LayoutState.fromRaw(items);
 
 const BasicExample = () => (
   <Layout
