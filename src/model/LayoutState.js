@@ -5,13 +5,13 @@ import type { ItemMap } from './ItemMap';
 
 import Item from './Item';
 import ItemKey from './ItemKey';
-import ItemRef from './ItemRef';
 
 
 const createDefaultItems = (type: string): Map<ItemKey, Item> => {
-  const item: Item = new Item({ key: 'root', type });
-  const key: ItemKey = item.key;
-  return OrderedMap({ key: item });
+  const item = new Item({ key: 'root', type });
+  let itemMap = OrderedMap();
+  itemMap = itemMap.set(item.key, item);
+  return itemMap;
 };
 
 const defaultState: {
@@ -32,10 +32,6 @@ class LayoutState extends LayoutRecord {
   createItem(item: Object): Item {
     item.key = this.generateRandomKey();
     return Item.fromJS(item);
-  }
-
-  lastItem(): ItemKey {
-    return this.itemMap.last();
   }
 
   generateRandomKey(): string {
@@ -68,11 +64,12 @@ class LayoutState extends LayoutRecord {
     return state.set('itemMap', items);
   }
 
-  static ROOT_REF = new ItemKey('root')
+  static ROOT_KEY = new ItemKey('root')
 }
 
 const itemsToRaw = (items) => {
   const result = {};
+  console.log(items.keys());
   for (const itemKey of items.keys()) {
     result[itemKey.toJS()] = items.get(itemKey).toJS();
   }
@@ -80,5 +77,7 @@ const itemsToRaw = (items) => {
 };
 
 window.LayoutState = LayoutState;
+window.Item = Item;
+window.ItemKey = ItemKey;
 
 export default LayoutState;
