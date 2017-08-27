@@ -1,6 +1,6 @@
 import Wrapper from './Wrapper';
 
-export default () => ({
+export default {
   Name: 'Refs',
   Wrapper
-});
+};

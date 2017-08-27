@@ -31,7 +31,7 @@ class LayoutState extends LayoutRecord {
 
   createItem(item: Object): Item {
     item.key = this.generateRandomKey();
-    return Item.fromJS(item);
+    return new Item(item);
   }
 
   generateRandomKey(): string {
